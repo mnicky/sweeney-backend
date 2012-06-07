@@ -35,7 +35,7 @@
   (let [actions (init-actions (mk-pool :single))]
     (is (= 0 (:last-id @actions)))
 
-    (add-action actions true (fn [] "empty") 10)
+    (is (= 1 (add-action actions true (fn [] "empty") 10)))
     (is (contains? (:actions @actions) 1))
     (is (= 1 (:last-id @actions)))
 
@@ -44,7 +44,7 @@
       (is (= 10 (:max-count newly-added)))
       (is (= 0 (:count newly-added))))
 
-    (add-action actions false (fn [] "empty") 20)
+    (is (= 2 (add-action actions false (fn [] "empty") 20)))
     (is (contains? (:actions @actions) 2))
     (is (= 2 (:last-id @actions)))))
 
@@ -52,5 +52,7 @@
   (let [actions (init-actions (mk-pool :single))]
     (add-action actions true (fn [] "empty") 10)
     (is (contains? (:actions @actions) 1))
-    (remove-action actions 1)
-    (is (= false (contains? (:actions @actions) 1)))))
+
+    (is (= (get-in @actions [:actions 1 :fn]) (:fn (remove-action actions 1))))
+    (is (= false (contains? (:actions @actions) 1)))
+    (is (nil? (:fn (remove-action actions 2))))))
