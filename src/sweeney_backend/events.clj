@@ -1,3 +1,7 @@
+; Inspired by dispatch example from ClojureScript One, available at:
+; https://github.com/brentonashworth/one/blob/master/src/lib/cljs/one/dispatch.cljs
+; Thanks!
+
 (ns sweeney-backend.events
   (:use [clojure.core.incubator :only (dissoc-in)])
   (:import [java.util.concurrent Callable Executors TimeUnit TimeoutException]))
@@ -102,6 +106,9 @@
   an event that satisfies the `event-pred` will be fired. If the `max-count`
   parameter is specified, the action will be removed from actions after it
   was invoked exactly `max-count` times.
+
+  `event-pred` is a function of `event-id`.
+  `f` is a function of `event-id` and `event-data`.
 
   Returns the id assigned to the action."
   ([actions event-pred f]
