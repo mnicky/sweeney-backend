@@ -107,14 +107,13 @@
   ([actions event-pred f]
     (add-action actions event-pred f nil))
   ([actions event-pred f max-count]
-    (let [id (inc (:last-id @actions))
-          action {:event-pred event-pred
+    (let [action {:event-pred event-pred
                   :fn f
                   :max-count max-count
                   :count 0}]
-      (swap! actions #(-> % (assoc-in [:actions id] action)
-                             (assoc-in [:last-id] id)))
-      id)))
+      (:last-id (swap! actions #(let [id (inc (:last-id %))]
+                                    (-> % (assoc-in [:actions id] action)
+                                    (assoc-in [:last-id] id))))))))
 
 (defn remove-action
   "Deletes action with specified `id` from `actions` and returns it. If action
