@@ -123,3 +123,22 @@
   (let [removed (get-in @action-pack [:actions id])]
     (swap! action-pack dissoc-in [:actions id])
     removed))
+
+(defn fire
+  "Raise an event with specified `event-id` and `event-data`. Actions
+  registered in `action-pack` whose `event-pred` returns true for specified
+  `event-id` will be submitted to the thread pool of the `action-pack`
+  for execution.
+
+  Returns map with ids of submitted actions as keys and futures representing
+  results of their execution as values. If no actions were submitted, returns
+  an empty map."
+  [action-pack event-id event-data]
+  (let [matches (filter (fn [[action-id {event-pred :event-pred}]]
+                           (event-pred event-id))
+                         (:actions @action-pack))
+        pool (:threadpool @action-pack)]
+    (into {}
+      (for [action matches]
+        (let [[action-id {fun :fun}] action]
+          [action-id (submit pool #(fun event-id event-data))])))))
