@@ -103,21 +103,14 @@
 
 (defn add-action
   "Registers function `f` as an action. The action will be invoked when
-  an event that satisfies the `event-pred` will be fired. If the `max-count`
-  parameter is specified, the action will be removed from actions after it
-  was invoked exactly `max-count` times.
+  an event that satisfies the `pred` will be fired.
 
-  `event-pred` is a function of `event-id`.
+  `pred` is a function of `event-id`.
   `f` is a function of `event-id` and `event-data`.
 
   Returns the id assigned to the action."
-  ([actions event-pred f]
-    (add-action actions event-pred f nil))
-  ([actions event-pred f max-count]
-    (let [action {:event-pred event-pred
-                  :fn f
-                  :max-count max-count
-                  :count 0}]
+  ([actions pred f]
+    (let [action {:pred pred :fun f}]
       (:last-id (swap! actions #(let [id (inc (:last-id %))]
                                     (-> % (assoc-in [:actions id] action)
                                     (assoc-in [:last-id] id))))))))
