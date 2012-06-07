@@ -32,7 +32,7 @@
   (is (= 4 @(submit (mk-pool :single) (fn [] 4)))))
 
 (deftest add-action-test
-  (let [actions (init-actions (mk-pool :single))]
+  (let [actions (init-action-pack (mk-pool :single))]
     (is (= 0 (:last-id @actions)))
 
     (is (= 1 (add-action actions true (fn [] "empty"))))
@@ -40,14 +40,14 @@
     (is (= 1 (:last-id @actions)))
 
     (let [newly-added ((:actions @actions) 1)]
-      (is (= true (:pred newly-added))))
+      (is (= true (:event-pred newly-added))))
 
     (is (= 2 (add-action actions false (fn [] "empty"))))
     (is (contains? (:actions @actions) 2))
     (is (= 2 (:last-id @actions)))))
 
 (deftest remove-action-test
-  (let [actions (init-actions (mk-pool :single))]
+  (let [actions (init-action-pack (mk-pool :single))]
     (add-action actions true (fn [] "empty"))
     (is (contains? (:actions @actions) 1))
 

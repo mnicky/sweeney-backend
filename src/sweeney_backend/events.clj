@@ -95,30 +95,31 @@
   (to-future
     (.submit pool (to-callable f))))
 
-(defn init-actions
-  "Returns an empty map of actions that will be executed in the specified
+(defn init-action-pack
+  "Returns an empty pack of actions that will be executed in the specified
   thread `pool`."
   [pool]
   (atom {:actions {} :last-id 0 :threadpool pool}))
 
 (defn add-action
-  "Registers function `f` as an action. The action will be invoked when
-  an event that satisfies the `pred` will be fired.
+  "Registers function `f` as an action to the specified `action-pack`.
+  The action will be invoked when an event that satisfies the `event-pred`
+  will be fired.
 
-  `pred` is a function of `event-id`.
+  `event-pred` is a function of `event-id`.
   `f` is a function of `event-id` and `event-data`.
 
-  Returns the id assigned to the action."
-  ([actions pred f]
-    (let [action {:pred pred :fun f}]
-      (:last-id (swap! actions #(let [id (inc (:last-id %))]
+  Returns the id assigned to the newly added action."
+  ([action-pack event-pred f]
+    (let [action {:event-pred event-pred :fun f}]
+      (:last-id (swap! action-pack #(let [id (inc (:last-id %))]
                                     (-> % (assoc-in [:actions id] action)
                                     (assoc-in [:last-id] id))))))))
 
 (defn remove-action
-  "Deletes action with specified `id` from `actions` and returns it. If action
-  with specified `id` doesn't exist, returns nil."
-  [actions id]
-  (let [removed (get-in @actions [:actions id])]
-    (swap! actions dissoc-in [:actions id])
+  "Deletes action with specified `id` from `action-pack` and returns it.
+  If action with specified `id` doesn't exist, returns nil."
+  [action-pack id]
+  (let [removed (get-in @action-pack [:actions id])]
+    (swap! action-pack dissoc-in [:actions id])
     removed))
