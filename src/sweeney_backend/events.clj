@@ -108,10 +108,13 @@
 
   `event-pred` is a function of `event-id`.
   `f` is a function of `event-id` and `event-data`.
+  `desc` is an optional string containing the description of the action.
 
   Returns the id assigned to the newly added action."
   ([action-pack event-pred f]
-    (let [action {:event-pred event-pred :fun f}]
+    (add-action action-pack event-pred f ""))
+  ([action-pack event-pred f desc]
+    (let [action {:event-pred event-pred :fun f :desc desc}]
       (:last-id (swap! action-pack #(let [id (inc (:last-id %))]
                                     (-> % (assoc-in [:actions id] action)
                                     (assoc-in [:last-id] id))))))))
@@ -134,10 +137,11 @@
   results of their execution as values. If no actions were submitted, returns
   an empty map."
   [action-pack event-id event-data]
-  (let [matches (filter (fn [[action-id {event-pred :event-pred}]]
+  (let [action-pack @action-pack
+        matches (filter (fn [[action-id {event-pred :event-pred}]]
                            (event-pred event-id))
-                         (:actions @action-pack))
-        pool (:threadpool @action-pack)]
+                         (:actions action-pack))
+        pool (:threadpool action-pack)]
     (into {}
       (for [action matches]
         (let [[action-id {fun :fun}] action]

@@ -35,20 +35,21 @@
   (let [actions (init-action-pack (mk-pool :single))]
     (is (= 0 (:last-id @actions)))
 
-    (is (= 1 (add-action actions true (fn [x y] "example-action"))))
+    (is (= 1 (add-action actions identity (fn [x y] "example-action") "description")))
     (is (contains? (:actions @actions) 1))
     (is (= 1 (:last-id @actions)))
 
     (let [newly-added ((:actions @actions) 1)]
-      (is (= true (:event-pred newly-added))))
+      (is (= identity (:event-pred newly-added)))
+      (is (= "description" (:desc newly-added))))
 
-    (is (= 2 (add-action actions false (fn [x y] "example-action"))))
+    (is (= 2 (add-action actions identity (fn [x y] "example-action"))))
     (is (contains? (:actions @actions) 2))
     (is (= 2 (:last-id @actions)))))
 
 (deftest remove-action-test
   (let [actions (init-action-pack (mk-pool :single))]
-    (add-action actions true (fn [x y] "example-action"))
+    (add-action actions identity (fn [x y] "example-action"))
     (is (contains? (:actions @actions) 1))
 
     (is (= (get-in @actions [:actions 1 :fun]) (:fun (remove-action actions 1))))
