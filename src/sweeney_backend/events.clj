@@ -95,11 +95,14 @@
   (to-future
     (.submit pool (to-callable f))))
 
+(defrecord ActionPack [actions last-id threadpool])
+(defrecord Action [event-pred fun desc])
+
 (defn init-action-pack
   "Returns an empty pack of actions that will be executed in the specified
   thread `pool`."
   [pool]
-  (atom {:actions {} :last-id 0 :threadpool pool}))
+  (atom (ActionPack. {} 0 pool)))
 
 (defn add-action
   "Registers function `f` as an action to the specified `action-pack`.
@@ -114,7 +117,7 @@
   ([action-pack event-pred f]
     (add-action action-pack event-pred f ""))
   ([action-pack event-pred f desc]
-    (let [action {:event-pred event-pred :fun f :desc desc}]
+    (let [action (Action. event-pred f desc)]
       (:last-id (swap! action-pack #(let [id (inc (:last-id %))]
                                     (-> % (assoc-in [:actions id] action)
                                     (assoc-in [:last-id] id))))))))
