@@ -4,7 +4,7 @@
         sweeney-backend.events))
 
 (deftest add-action-test
-  (let [actions (init-action-pack (t/mk-pool :single))]
+  (let [actions (init-action-pack (t/mk-pool))]
     (is (= 0 (:last-id @actions)))
 
     (is (= 1 (add-action actions identity (fn [x y] "example-action") "description")))
@@ -20,7 +20,7 @@
     (is (= 2 (:last-id @actions)))))
 
 (deftest remove-action-test
-  (let [actions (init-action-pack (t/mk-pool :single))]
+  (let [actions (init-action-pack (t/mk-pool))]
     (add-action actions identity (fn [x y] "example-action"))
     (is (contains? (:actions @actions) 1))
 

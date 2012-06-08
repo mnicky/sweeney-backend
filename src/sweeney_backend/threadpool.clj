@@ -9,28 +9,59 @@
 (defn mk-pool
   "Creates and return a new thread pool. The `type` can be:
 
-  :fixed  - ThreadPool with fixed number of Threads, as specified in `option`
-            (defaults to number of available CPUs + 2). This thread pool
-            has unbounded task queue.
+  :fixed  - Thread pool with fixed number of threads and unbounded task queue.
+            This type accepts optional parameter :size - the number of
+            threads (defaults to number of available CPUs + 2).
 
-  :cached - ThreadPool with unbounded maximal number of threads. The threads
-            will be terminated if they have been idle for more than the
-            keep-alive time in milliseconds, as specified in `option`
-            (defaults to 15000ms).
+  :cached - Thread pool with unbounded maximal number of threads. The threads
+            will be terminated if they have been idle for more than their
+            keep-alive time.
+            This type accepts optional parameter :keepalive - the keep-alive
+            time in milliseconds (defaults to 15000ms). A value of zero will
+            cause threads to terminate immediately after executing tasks.
 
-  :single - ThreadPool with only single thread and unbounded task queue."
+  :own    - Thread pool with unbounded task queue which accepts these optional
+            parameters:
+
+              :size - the number of threads (defaults to number of available
+                      CPUs + 2)
+
+              :max  - maximal allowed number of threads (defaults to number
+                      of available CPUs + 2, or `size` if it is greater)
+
+              :keepalive - keep-alive time of threads (defaults to 15000ms).
+                           Only threads above the `size` count will be
+                           terminated after the keep-alive time.
+
+  If no `type` is specified, defaults to the :fixed type with default options.
+
+  Examples:
+            (mk-pool)
+
+            (mk-pool :fixed)
+            (mk-pool :fixed :size 8)
+
+            (mk-pool :cached)
+            (mk-pool :cached :keepalive 60000)
+
+            (mk-pool :own :size 4 :max 8 :keepalive 30000)
+  "
   ([]
     (mk-pool :fixed))
-  ([type]
-    (mk-pool type nil))
-  ([type option]
+  ([type & {:keys [size max keepalive]
+            :or    {size (+ (cpu-count) 2)
+                    max  (+ (cpu-count) 2)
+                    keepalive 15000}}]
+  {:pre [(< 0 size)]}
     (case type
-      :fixed (Executors/newFixedThreadPool (or option (+ (cpu-count) 2)))
-      :cached (let [pool (Executors/newCachedThreadPool)]
-                 (.setKeepAliveTime pool (or option 15000) TimeUnit/MILLISECONDS)
-                 pool)
-      :single (Executors/newSingleThreadExecutor)
-      (throw (RuntimeException. (str "Unsupported pool type: " type "."))))))
+      :fixed (Executors/newFixedThreadPool size)
+      :cached (doto (Executors/newCachedThreadPool)
+                 (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS))
+      :own (let [max (if (<= size max) max size)]
+              (doto (Executors/newFixedThreadPool size)
+                (.setMaximumPoolSize max)
+                (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS)))
+      (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))))
 
 (defn shutdown!
   "Executes all previously submitted tasks, shutdowns the thread `pool` and
