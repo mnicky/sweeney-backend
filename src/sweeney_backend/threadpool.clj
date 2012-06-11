@@ -1,5 +1,6 @@
 (ns sweeney-backend.threadpool
-  (:import [java.util.concurrent Callable Executors TimeUnit TimeoutException]))
+  (:import [java.util.concurrent Callable Executors ThreadPoolExecutor
+                                  TimeUnit TimeoutException]))
 
 (defn cpu-count
   "Returns the number of CPUs on this machine."
@@ -84,62 +85,62 @@
 
 (defn terminated?
   "Returns whether the thread `pool` has already terminated (shutdown and
-  all tasks ended."
+  also all tasks ended."
   [pool]
   (.isTerminated pool))
 
-(defn active-count
-  "Returns the approximate number of threads
-  that are actively executing tasks."
-  [pool]
-  (.getActiveCount pool))
-
-(defn completed-count
-  "Returns the approximate total number of tasks
-  that have completed execution."
-  [pool]
-  (.getCompletedTaskCount pool))
-
-(defn total-count
+(defn submitted-tasks
   "Returns the approximate total number of tasks
   that have ever been submitted for execution."
   [pool]
   (.getTaskCount pool))
 
-(defn queued-count
+(defn completed-tasks
+  "Returns the approximate total number of tasks
+  that have completed execution."
+  [pool]
+  (.getCompletedTaskCount pool))
+
+(defn active-tasks
+  "Returns the approximate number of threads
+  that are actively executing tasks."
+  [pool]
+  (.getActiveCount pool))
+
+(defn queued-tasks
   "Returns the number of tasks that have been submitted and
   are waiting for execution."
   [pool]
   (.size (.getQueue pool)))
 
-(defn current-size
-  "Returns the current number of threads in the pool."
-  [pool]
-  (.getPoolSize pool))
-
-(defn core-size
+(defn min-size
   "Returns the core number of threads, which are the threads that aren't
   terminated even when they are idle."
   [pool]
   (.getCorePoolSize pool))
-
-(defn largest-size
-  "Returns the largest number of threads that
-  have ever simultaneously been in the pool."
-  [pool]
-  (.getLargestPoolSize pool))
 
 (defn max-size
   "Returns the maximum allowed number of threads."
   [pool]
   (.getMaximumPoolSize pool))
 
+(defn current-size
+  "Returns the current number of threads in the pool."
+  [pool]
+  (.getPoolSize pool))
+
+(defn peak-size
+  "Returns the largest number of threads that
+  have ever simultaneously been in the pool."
+  [pool]
+  (.getLargestPoolSize pool))
+
 (defn keepalive-time
   "Returns the thread keep-alive time, which is the amount of time that
   threads in excess of the core pool size may remain idle before being
   terminated."
   [pool]
-  (.getKeepAliveTime pool))
+  (.getKeepAliveTime pool TimeUnit/MILLISECONDS))
 
 (defn to-future
   "Takes a java.util.concurrent.Future and returns a Clojure future made
@@ -178,3 +179,27 @@
   [pool f]
   (to-future
     (.submit pool (to-callable f))))
+
+(defmethod print-method ThreadPoolExecutor
+  [p w]
+  (.write w (str "#<ThreadPoolExecutor: "
+
+                 (if (shutdown? p) "SHUTDOWN - " "")
+                 (if (terminated? p) "and TERMINATED - " "")
+
+                 "Tasks: "
+                 (submitted-tasks p) " submitted, "
+                 (completed-tasks p) " completed, "
+                 (active-tasks p) " active, "
+                 (queued-tasks p) " queued; "
+
+                 "Threads: "
+                 (min-size p) " min, "
+                 (max-size p) " max, "
+                 (current-size p) " current, "
+                 (peak-size p) " peak; "
+
+                 "Keep-alive time: "
+                 (keepalive-time p) "ms"
+                 ">"
+            )))

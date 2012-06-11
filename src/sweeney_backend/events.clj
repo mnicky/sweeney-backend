@@ -7,6 +7,28 @@
 (defrecord ActionPack [actions last-id threadpool])
 (defrecord Action [event-pred fun desc])
 
+(defmethod print-method Action
+  [a w]
+  (.write w (str "#<Action: \"" (:desc a) "\" on "
+                 (if (set? (:event-pred a))
+                   (:event-pred a)
+                   "/some predicate/")
+                 ">")))
+
+(defmethod print-method ActionPack
+  [ap w]
+  (.write w (str "#<ActionPack: Last added id: " (:last-id ap) ", Actions by id:"))
+  (if (empty? (:actions ap))
+    (.write w " NO ACTIONS\n")
+    (do
+      (.write w "\n")
+      (doseq [a (:actions ap)]
+        (.write w (format "  %03d - " (key a)))
+        (print-method (val a) w)
+        (.write w "\n"))))
+  (print-method (:threadpool ap) w)
+  (.write w ">"))
+
 (defn init-action-pack
   "Returns an empty pack of actions that will be executed in the specified
   thread `pool`."
