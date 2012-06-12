@@ -1,6 +1,6 @@
 (ns sweeney-backend.threadpool
-  (:import [java.util.concurrent Callable Executors ThreadPoolExecutor
-                                  TimeUnit TimeoutException]))
+  (:import [java.util.concurrent Callable Executors ThreadPoolExecutor TimeUnit TimeoutException]
+            [sweeney_backend.threadpool ConfigurableThreadFactory]))
 
 (defn cpu-count
   "Returns the number of CPUs on this machine."
@@ -34,26 +34,45 @@
                            Only threads above the `size` count will be
                            terminated after the keep-alive time.
 
-  If no `type` is specified, defaults to the :fixed type with default options.
+  All thread pool types have also these optional parameters:
+
+            :daemon - Specifies whether the threads in this thread pool
+                      are daemon or not (default is false).
+                      The JVM will shut down when all non-daemon threads
+                      have terminated, so daemon threads are threads
+                      whose existence has no impact on whether the JVM
+                      continues to execute or shuts down.
+
+            :prefix - Specifies the string prefix for the name of the
+                      threads. This can be useful especially when debugging.
+
+  If no `type` is specified, defaults to the :fixed type with default values
+  for all available parameters.
 
   Examples:
             (mk-pool)
 
             (mk-pool :fixed)
-            (mk-pool :fixed :size 8)
+            (mk-pool :fixed :daemon true :prefix \"event-manager\")
+            (mk-pool :fixed :size 5)
+            (mk-pool :fixed :size 8 :daemon true)
 
             (mk-pool :cached)
+            (mk-pool :cached :prefix \"server\")
             (mk-pool :cached :keepalive 60000)
 
-            (mk-pool :own :size 4 :max 8 :keepalive 30000)
+            (mk-pool :own :size 4 :max 8 :keepalive 30000 :daemon true)
   "
   ([]
     (mk-pool :fixed))
-  ([type & {:keys [size max keepalive]
+  ([type & {:keys [size max keepalive daemon prefix]
             :or    {size (+ (cpu-count) 2)
                     max  (+ (cpu-count) 2)
-                    keepalive 15000}}]
+                    keepalive 15000
+                    daemon false
+                    prefix "sweeney-backend-threadpool"}}]
   {:pre [(< 0 size)]}
+  (doto
     (case type
       :fixed (Executors/newFixedThreadPool size)
       :cached (doto (Executors/newCachedThreadPool)
@@ -62,7 +81,8 @@
               (doto (Executors/newFixedThreadPool size)
                 (.setMaximumPoolSize max)
                 (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS)))
-      (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))))
+      (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))
+    (.setThreadFactory (ConfigurableThreadFactory. prefix daemon)))))
 
 (defn shutdown!
   "Executes all previously submitted tasks, shutdowns the thread `pool` and
