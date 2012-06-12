@@ -17,7 +17,7 @@
 
 (defmethod print-method ActionPack
   [ap w]
-  (.write w (str "#<ActionPack: Last added id: " (:last-id ap) ", Actions by id:"))
+  (.write w (str "#<ActionPack: Last id: " (:last-id ap) ", Actions by id:"))
   (if (empty? (:actions ap))
     (.write w " NO ACTIONS\n")
     (do
@@ -60,6 +60,21 @@
   (let [removed (get-in @action-pack [:actions id])]
     (swap! action-pack dissoc-in [:actions id])
     removed))
+
+(defn remove-action-by-desc
+  "Deletes all actions having the specified description from `action-pack`
+  and returns the number of deleted actions. If no action with such
+  description exist, returns nil."
+  [action-pack desc]
+  (loop [to-remove (keys (filter #(= desc (:desc (val %))) (:actions @action-pack)))
+         removed 0]
+    (if (seq to-remove)
+      (if (remove-action action-pack (first to-remove))
+        (recur (rest to-remove) (inc removed))
+        (recur (rest to-remove) removed))
+      (if (zero? removed)
+        nil
+        removed))))
 
 (defn fire
   "Raise an event with specified `event-id` and `event-data`. Actions
