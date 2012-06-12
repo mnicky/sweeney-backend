@@ -6,11 +6,15 @@
 (deftest mk-pool-test
   (let [fixed-pool (mk-pool :fixed :size 5)]
     (is (instance? java.util.concurrent.ThreadPoolExecutor fixed-pool))
-    (is (= 5 (.getCorePoolSize fixed-pool)))
+    (is (= 5 (.getCorePoolSize fixed-pool))))
 
   (let [cached-pool (mk-pool :cached :keepalive 20000)]
     (is (instance? java.util.concurrent.ThreadPoolExecutor cached-pool))
-    (is (= 20000 (.getKeepAliveTime cached-pool TimeUnit/MILLISECONDS)))))
+    (is (= 20000 (.getKeepAliveTime cached-pool TimeUnit/MILLISECONDS))))
+
+  (let [own-pool (mk-pool :own :size 0)]
+    (is (instance? java.util.concurrent.ThreadPoolExecutor own-pool))
+    (is (= 0 (.getCorePoolSize own-pool))))
 
   (is (thrown? RuntimeException (mk-pool :undefined))))
 

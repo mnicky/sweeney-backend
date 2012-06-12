@@ -71,14 +71,15 @@
                     keepalive 15000
                     daemon false
                     prefix "sweeney-backend-threadpool"}}]
-  {:pre [(< 0 size)]}
+  {:pre [(<= 0 size)]}
   (doto
     (case type
       :fixed (Executors/newFixedThreadPool size)
       :cached (doto (Executors/newCachedThreadPool)
                  (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS))
       :own (let [max (if (<= size max) max size)]
-              (doto (Executors/newFixedThreadPool size)
+              (doto (Executors/newFixedThreadPool 1)
+                (.setCorePoolSize size)
                 (.setMaximumPoolSize max)
                 (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS)))
       (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))
