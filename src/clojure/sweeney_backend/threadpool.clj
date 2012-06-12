@@ -11,8 +11,8 @@
   "Creates and return a new thread pool. The `type` can be:
 
   :fixed  - Thread pool with fixed number of threads and unbounded task queue.
-            This type accepts optional parameter :size - the number of
-            threads (defaults to number of available CPUs + 2).
+            This type accepts optional parameter :size - the number
+            of threads (defaults to the number of available CPUs + 2).
 
   :cached - Thread pool with unbounded maximal number of threads. The threads
             will be terminated if they have been idle for more than their
@@ -24,8 +24,8 @@
   :own    - Thread pool with unbounded task queue which accepts these optional
             parameters:
 
-              :size - the number of threads (defaults to number of available
-                      CPUs + 2)
+              :size - the minimal number of threads (defaults to the number
+                      of available CPUs + 2)
 
               :max  - maximal allowed number of threads (defaults to number
                       of available CPUs + 2, or `size` if it is greater)
@@ -34,7 +34,7 @@
                            Only threads above the `size` count will be
                            terminated after the keep-alive time.
 
-  All thread pool types have also these optional parameters:
+  All thread pool types also accept these optional parameters:
 
             :daemon - Specifies whether the threads in this thread pool
                       are daemon or not (default is false).
