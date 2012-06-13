@@ -12,9 +12,9 @@
     (is (instance? java.util.concurrent.ThreadPoolExecutor cached-pool))
     (is (= 20000 (.getKeepAliveTime cached-pool TimeUnit/MILLISECONDS))))
 
-  (let [own-pool (mk-pool :own :size 0)]
+  (let [own-pool (mk-pool :variable :size 3)]
     (is (instance? java.util.concurrent.ThreadPoolExecutor own-pool))
-    (is (= 0 (.getCorePoolSize own-pool))))
+    (is (= 3 (.getCorePoolSize own-pool))))
 
   (is (thrown? RuntimeException (mk-pool :undefined))))
 

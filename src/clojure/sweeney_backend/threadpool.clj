@@ -11,28 +11,40 @@
   "Creates and return a new thread pool. The `type` can be:
 
   :fixed  - Thread pool with fixed number of threads and unbounded task queue.
-            This type accepts optional parameter :size - the number
-            of threads (defaults to the number of available CPUs + 2).
+            This type has fixed number of threads that are never terminated
+            and are executing submitted tasks. If a new task is submitted, but
+            all threads are already executing other tasks, the task will be
+            queued for a future execution.
+            This type accepts these optional parameters:
 
-  :cached - Thread pool with unbounded maximal number of threads. The threads
-            will be terminated if they have been idle for more than their
-            keep-alive time.
-            This type accepts optional parameter :keepalive - the keep-alive
-            time in milliseconds (defaults to 15000ms). A value of zero will
-            cause threads to terminate immediately after executing tasks.
+            :size - the number of threads (defaults to the number of available
+                    CPUs + 2).
 
-  :own    - Thread pool with unbounded task queue which accepts these optional
-            parameters:
+  :cached - Thread pool with unbounded maximal number of threads and no task
+            queue. For any new submitted task a new thread is created which
+            will execute the task. The threads will be terminated if they have
+            been idle for more than their keep-alive time.
+            This type accepts these optional parameters:
 
-              :size - the minimal number of threads (defaults to the number
-                      of available CPUs + 2)
+            :keepalive - the keep-alive time in milliseconds (defaults to
+                         15000ms). This is the amount of time that threads
+                         may remain idle before being terminated. A value
+                         of zero will cause threads to terminate immediately
+                         after they ended executing a task.
 
-              :max  - maximal allowed number of threads (defaults to number
-                      of available CPUs + 2, or `size` if it is greater)
+  :variable - Thread pool with limited maximal number of threads and unbounded
+              task queue. When a new task is submitted, this type will create
+              a new thread unless the maximal allowed number of threads is
+              reached. If this occurs, the task will be queued for a future
+              execution. After the thread has finished executing the task, it
+              will wait for the keep-alive time and then terminated.
+              This type accepts these optional parameters:
 
-              :keepalive - keep-alive time of threads (defaults to 15000ms).
-                           Only threads above the `size` count will be
-                           terminated after the keep-alive time.
+              :size  - Maximal allowed number of threads (defaults to number
+                       of available CPUs + 2).
+
+              :keepalive - The same as above, but must be greater then zero
+                           (defaults to 15000ms).
 
   All thread pool types also accept these optional parameters:
 
@@ -43,8 +55,8 @@
                       whose existence has no impact on whether the JVM
                       continues to execute or shuts down.
 
-            :prefix - Specifies the string prefix for the name of the
-                      threads. This can be useful especially when debugging.
+            :prefix - Specifies the string prefix for the name of the threads.
+                      This can be useful especially when debugging.
 
   If no `type` is specified, defaults to the :fixed type with default values
   for all available parameters.
@@ -61,29 +73,28 @@
             (mk-pool :cached :prefix \"server\")
             (mk-pool :cached :keepalive 60000)
 
-            (mk-pool :own :size 4 :max 8 :keepalive 30000 :daemon true)
+            (mk-pool :variable :size 8)
+            (mk-pool :variable :size 10 :keepalive 30000 :daemon true)
   "
   ([]
     (mk-pool :fixed))
   ([type & {:keys [size max keepalive daemon prefix]
             :or    {size (+ (cpu-count) 2)
-                    max  (+ (cpu-count) 2)
                     keepalive 15000
                     daemon false
                     prefix "sweeney-backend-threadpool"}}]
-  {:pre [(<= 0 size)]}
-  (doto
-    (case type
-      :fixed (Executors/newFixedThreadPool size)
-      :cached (doto (Executors/newCachedThreadPool)
-                 (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS))
-      :own (let [max (if (<= size max) max size)]
-              (doto (Executors/newFixedThreadPool 1)
-                (.setCorePoolSize size)
-                (.setMaximumPoolSize max)
-                (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS)))
-      (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))
-    (.setThreadFactory (ConfigurableThreadFactory. prefix daemon)))))
+  {:pre [(< 0 size)]}
+    (doto
+      (case type
+        :fixed (Executors/newFixedThreadPool size)
+        :cached (doto (Executors/newCachedThreadPool)
+                   (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS))
+        :variable (doto (Executors/newFixedThreadPool size)
+                     (assert (< 0 keepalive))
+                     (.setKeepAliveTime keepalive TimeUnit/MILLISECONDS)
+                     (.allowCoreThreadTimeOut true))
+        (throw (RuntimeException. (str "Unsupported thread pool type: '" type "'."))))
+      (.setThreadFactory (ConfigurableThreadFactory. prefix daemon)))))
 
 (defn shutdown!
   "Executes all previously submitted tasks, shutdowns the thread `pool` and
@@ -134,6 +145,12 @@
   [pool]
   (.size (.getQueue pool)))
 
+(defn queue-capacity
+  "Returns maximal capacity of the queue of the provided thread pool."
+  [pool]
+  (let [q (.getQueue pool)]
+    (+ (.size q) (.remainingCapacity q))))
+
 (defn min-size
   "Returns the core number of threads, which are the threads that aren't
   terminated even when they are idle."
@@ -155,6 +172,13 @@
   have ever simultaneously been in the pool."
   [pool]
   (.getLargestPoolSize pool))
+
+(defn core-thread-timeout?
+  "Returns true if this pool allows core threads to time out and terminate
+  if no tasks arrive within the keepAlive time, being replaced if needed
+  when new tasks arrive."
+  [pool]
+  (.allowsCoreThreadTimeOut pool))
 
 (defn keepalive-time
   "Returns the thread keep-alive time, which is the amount of time that
@@ -212,15 +236,18 @@
                  (submitted-tasks p) " submitted, "
                  (completed-tasks p) " completed, "
                  (active-tasks p) " active, "
-                 (queued-tasks p) " queued; "
+                 (queued-tasks p) " queued "
+
+                 "(limit is "
+                 (queue-capacity p) "); "
 
                  "Threads: "
-                 (min-size p) " min, "
+                 (if (core-thread-timeout? p) "0" (min-size p)) " min, "
                  (max-size p) " max, "
                  (current-size p) " current, "
                  (peak-size p) " peak; "
 
-                 "Keep-alive time: "
+                 "Timeout: "
                  (keepalive-time p) "ms"
                  ">"
             )))
