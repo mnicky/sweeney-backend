@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<image>
+			<link>http://www.root.cz/</link>
+			<title>Root.cz</title>
+			<url>http://ii.iinfo.cz/r/rss-88x31.gif</url>
+			<width>88</width>
+			<height>31</height>
+		</image>
+		<title>Root.cz - zprávičky</title>
+		<link>http://www.root.cz/zpravicky/</link>
+		<description>Root.cz - informace nejen ze světa Linuxu</description>
+		<language>cs</language>
+		<pubDate>Fri, 15 Jun 2012 14:53:13 GMT</pubDate>
+		<item>
+			<title>Opera zvyšuje stabilitu, oddělila pluginy do vlastních procesů</title>
+			<link>http://www.root.cz/zpravicky/opera-zvysuje-stabilitu-oddelila-pluginy-do-vlastnich-procesu/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Vyšla nová verze internetového prohlížeče Opera 12. Kromě nové podpory snadné změny vzhledu je zde i množství technických věcí, které nejsou na první pohled vidět. Například rychlejší start i s množstvím panelů, oddělení pluginů do samostatných...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 14:53:13 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26760</guid>
+		</item>
+		<item>
+			<title>Nokia má další problémy, bude propouštět a šetřit</title>
+			<link>http://www.root.cz/zpravicky/nokia-ma-dalsi-problemy-bude-propoustet-a-setrit/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Podle posledních zpráv z finanční sféry se společnost Nokia potýká s provozní ztrátou kolem 3 %. Jako součást řešení plánuje společnost masivní propouštění (cca 10 000 lidí), uzavření poboček v Německu, Kanadě a továrny ve Finsku. Redukce se...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 13:36:15 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26759</guid>
+		</item>
+		<item>
+			<title>NVIDIA vydala nové ovladače pro Linux</title>
+			<link>http://www.root.cz/zpravicky/nvidia-vydala-nova-ovladace-pro-linux/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Vývojáři v NVIDIA uvolnili tento týden novou verzi ovladačů pro Linux. Verze 295.59 rozšiřuje podporu pro následující GPU: NVS 5400M, NVS 310, Quadro 410, GeForce GT 620M, GeForce GT 640M, GeForce GT 640M LE, GeForce GT 650M, GeForce GTX 660M,...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 12:24:17 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26758</guid>
+		</item>
+		<item>
+			<title>Humble Indie Bundle skončil rekordní sumou 5 milionů USD</title>
+			<link>http://www.root.cz/zpravicky/humble-indie-bundle-skoncil-rekordni-sumou-5-milionu-usd/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Skončilo páté pokračování akce Humble Indie Bundle. Tentokrát se prodalo 598 972 kusů za úžasných více než 5 milionů USD (5 106 652,68 USD). Průměrná cena, kterou uživatelé zaplatili skončila na 8,53 USD, z čehož uživatelé Windows platili...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 11:01:51 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26757</guid>
+		</item>
+		<item>
+			<title>Vyšlo GCC 4.7.1</title>
+			<link>http://www.root.cz/zpravicky/vyslo-gcc-4-7-1/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Richard Guenther oznámil vydání první opravné verze GNU Compiler Collection (GCC) 4.7.1. Přináší důležité opravy regresí a vážných chyb z této větve, stejně jako opravy další stovky menších nalezených chyb. Verze 4.7 vyšla před třemi měsíci.</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 09:53:16 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26756</guid>
+		</item>
+		<item>
+			<title>Nejpopulárnější mobilní českou aplikací jsou Mapy.cz</title>
+			<link>http://www.root.cz/zpravicky/nejpopularnejsi-mobilni-ceskou-aplikaci-jsou-mapy-cz/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Z výsledků druhé ročníku ankety Mobilní aplikace roku vyplývá, že nejpopulárnější českou aplikací pro mobilní telefony jsou Mapy.cz. Nejlepší UX aplikací pak Jízdní řády iDnesu. Podívejte se, kdo zvítězil v jednotlivých kategoriích druhého...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 08:38:33 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26755</guid>
+		</item>
+		<item>
+			<title>Vše co vás zajímá o novém panelu ve Firefoxu 13</title>
+			<link>http://www.root.cz/zpravicky/vse-co-vas-zajima-o-novem-panelu-ve-firefoxu-13/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Nedávno jsme vás informovali o vydání Firefoxu 13 a jeho asi největší (nebo nejviditelnější) novinkou je systém otevírání nových panelů. Tam se vám rovnou zobrazují náhledy na vaše oblíbené (často navštěvované) stránky. V souvislosti s touto...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Fri, 15 Jun 2012 07:15:56 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26754</guid>
+		</item>
+		<item>
+			<title>Skype 4.0 pro Linux</title>
+			<link>http://www.root.cz/zpravicky/skype-4-0-pro-linux/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Včera byl vydán populární IM klient Skype ve verzi 4.0 pro Linux. Podle oznámení na blogu Skypu je konečně vyplněna díra mezi desktopovými klienty pro různé platformy.  Ke stažení jsou připraveny 32bit a 64bit balíčky pro Ubuntu 10.04 (mám...</description>
+<author>redakce@root.cz (Root.cz: Michal Breškovec)</author><pubDate>Fri, 15 Jun 2012 06:09:21 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26753</guid>
+		</item>
+		<item>
+			<title>Technologické preview webového prohlížeče rekonq 1.0</title>
+			<link>http://www.root.cz/zpravicky/technologicke-preview-weboveho-prohlizece-rekonq-1-0/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Prohlížeč rekonq tento rok prožívá obrat o 180° a preview chystané verze 1.0 to jen potvrzuje. Pryč jsou doby, kdy rekonq sloužil maximálně pro stáhnutí jiného prohlížeče a ani to mu nešlo dobře. Dnes je z něj použitelný nástroj, který si najde...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Thu, 14 Jun 2012 13:05:56 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26752</guid>
+		</item>
+		<item>
+			<title>Má být použití Linuxu ve válce zakázáno licencí?</title>
+			<link>http://www.root.cz/zpravicky/ma-byt-pouziti-linuxu-ve-valce-zakazano-licenci/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Nedávná zpráva o tom, že US Navy chce použít Linux pro navádění bezpilotních letadel vyvolala v komunitě zajímavou filozofickou debatu. Střízlivý pohled na ní přinesl Jon Hall na svém blogu. Někteří členové komunity na něj prý tlačí, aby se...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Thu, 14 Jun 2012 10:29:09 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26751</guid>
+		</item>
+		<item>
+			<title>Emacs 24.1 podporuje GTK+ 3</title>
+			<link>http://www.root.cz/zpravicky/emacs-24-1-podporuje-gtk-3/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Vyšla nová verze textového editoru Emacs 24.1 a je dostupná na FTP serverech projektu. Mezi novinkami najdete nový balíčkovací systém, podporu pro zprava psané texty, vylepšení témat, vylepšené automatické doplňování nebo podporu pro GnuTLS, GTK+...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Thu, 14 Jun 2012 09:05:15 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26750</guid>
+		</item>
+		<item>
+			<title>Jak si vybrat NoSQL databázi</title>
+			<link>http://www.root.cz/zpravicky/jak-si-vybrat-nosql-databazi/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Pod názvem NoSQL databáze se skrývá velké množství databází, které mají společného maximálně to, že uchovávají nějaká data a pro komunikaci nepoužívají jazyk SQL. Jsou mezi nimi velké rozdíly, ať už ve způsobu práce s daty, v jejich uchovávání...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Thu, 14 Jun 2012 07:32:38 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26749</guid>
+		</item>
+		<item>
+			<title>Školení internetového marketingu za hubičku</title>
+			<link>http://www.root.cz/zpravicky/skoleni-internetoveho-marketingu-za-hubicku/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Dobrý web nabízí do 26. 6. 2012 školení s 50% slevou. Vyberte si jakékoliv školení Dobrého webu a získejte ho za polovic. Naučíte se, jak nechat svůj web více vydělávat – více konverzí, lepší SEO, efektivní prokliky, obchodně úspěšné texty,...</description>
+<author>redakce@root.cz (Root.cz: Redakce)</author><pubDate>Thu, 14 Jun 2012 07:00:36 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26747</guid>
+		</item>
+		<item>
+			<title>HTC bylo odstřiženo od Windows RT</title>
+			<link>http://www.root.cz/zpravicky/htc-bylo-odstrizeno-od-windows-rt/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Firma HTC neprožívá dobré časy. Její akcie klesly za poslední rok o 68 %  a může za to hlavně Apple a také Samsung, který se stal v oblasti telefonů s Androidem pojmem . Teď dostalo HTC další ránu a to od Microsoftu, podle nějž HTC prodává málo...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Thu, 14 Jun 2012 06:11:18 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26748</guid>
+		</item>
+		<item>
+			<title>Pozvánka na 81. nejen linuxový sraz v Brně</title>
+			<link>http://www.root.cz/zpravicky/pozvanka-na-81-nejen-linuxovy-sraz-v-brne/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Zveme vás na 81. sraz příznivců svobodného SW, který se bude konat v pátek 15. června od 18 hodin v restauraci H3 v Králově Poli. Těšíme se na vás. LvB</description>
+<author>redakce@root.cz (Root.cz: Ladislav Nešněra)</author><pubDate>Wed, 13 Jun 2012 17:27:20 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26746</guid>
+		</item>
+		<item>
+			<title>Registrace na říjnové konference spuštěna, Future Media track oznámen</title>
+			<link>http://www.root.cz/zpravicky/registrace-na-rijnove-konference-spustena-future-media-track-oznamen/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Konference Gentoo miniconf, LinuxDays, openSUSE Conference a SUSE Labs conference dnes spustily společnou registraci. Při té příležitosti byl také oznámen netechnický Future Media track.  Jak jsme již před časem informovali, v říjnu proběhnou...</description>
+<author>redakce@root.cz (Root.cz: Michal Hrusecky)</author><pubDate>Wed, 13 Jun 2012 17:26:56 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26745</guid>
+		</item>
+		<item>
+			<title>PageSpeed Insights 2.0 zjistí, kde jsou slabá místa vašeho webu</title>
+			<link>http://www.root.cz/zpravicky/pagespeed-insights-2-0-zjisti-kde-jsou-slaba-mista-vaseho-webu/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Vývojáři prohlížečů Google Chrome a Chromium na svém blogu informují o vydání nové verze rozšíření PageSpeed Insights 2.0, které vývojářům webových stránek pomůže s optimalizace­mi. PageSpeed Insights si projde celý web, zjistí, kde má slabá...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 13:07:01 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26744</guid>
+		</item>
+		<item>
+			<title>Nový fork OpenBSD s názvem Bitrig</title>
+			<link>http://www.root.cz/zpravicky/novy-fork-openbsd-s-nazvem-bitrig/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Na světě je nový fork populárního operačního systému OpenBSD. Nese název Bitrig a vývojáři ho profilují takto::   	Rychlý, bezpečný, svobodný a přenositelný systém  	Roční vývojový cyklus se třemi RC  	Co nejmenší základní systém  	Vhodný ke...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 11:26:24 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26743</guid>
+		</item>
+		<item>
+			<title>Lighttpd 1.4.31: po půl roce několik opravených chyb</title>
+			<link>http://www.root.cz/zpravicky/lighttpd-1-4-31-po-pul-roce-nekolik-opravenych-chyb/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Po několika měsících vyšla nová verze webového serveru Lighttpd s označením 1.4.31. Projek­t Lighttpd už bohužel není tak aktivní jako před dvěma lety a nyní vycházejí pouze udržovací verze, z nichž ani 1.4.31 není výjimkou. Pokud Lighttpd...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 09:56:05 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26742</guid>
+		</item>
+		<item>
+			<title>KDE Telepathy 0.4 umí volat včetně videa</title>
+			<link>http://www.root.cz/zpravicky/kde-telepathy-0-4-umi-volat-vcetne-videa/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Po čtyřech měsících vývoje uvolnili vývojáři projektu KDE Telepathy jeho novou verzi 0.4. Většina změn, jak sami píší, se nachází pod kapotou, takže jde převážně o opravy a optimalizace, které přinesly hlavně větší stabilitu. Důležitou novinkou...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 08:34:00 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26741</guid>
+		</item>
+		<item>
+			<title>Tisíce kompromitovaných Twitter účtů ze služby TweetGif</title>
+			<link>http://www.root.cz/zpravicky/tisice-kompromitovanych-twitter-uctu-ze-sluzby-tweetgif/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Přes službu TweetGif se podařilo neznámým útočníkům získat část databáze s přístupovými tokeny. Jelikož jde o token, který je pro každou aplikaci unikátní, tak nepomůže změna hesla. Uživatelé by měli vymazat přístup aplikace TweetGif a spárovat...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 07:22:42 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26740</guid>
+		</item>
+		<item>
+			<title>Firefox 15 Aurora umí číst PDF soubory</title>
+			<link>http://www.root.cz/zpravicky/firefox-15-aurora-umi-cist-pdf-soubory/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Vyšla vývojová verze Firefoxu 15, ve které vývojáři představili integrovanou čtečku PDF dokumentů. Ta je postavená na knihovně pdf.js, což je čtečka implementovaná v JavaScriptu. Ukázku práce této knihovny si můžete prohlédnout na webu...</description>
+<author>redakce@root.cz (Root.cz: Adam Štrauch)</author><pubDate>Wed, 13 Jun 2012 06:04:12 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26739</guid>
+		</item>
+		<item>
+			<title>Unity 5.12 opravilo problém s výkonem OpenGL</title>
+			<link>http://www.root.cz/zpravicky/unity-5-12-opravilo-problem-s-vykonem-opengl/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Server Phoronix.com přináší test výkonu nejnovější verze Unity 5.12. Ta by měla řešit problém s výkonem OpenGL v hrách a aplikacích. Server porovnal výkon Unity 5.12 (klasické i 2D) s verzí 5.10 a rozdíly jsou opravdu značné. K testu byl použit...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Tue, 12 Jun 2012 13:05:56 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26735</guid>
+		</item>
+		<item>
+			<title>Intel: Android dosud není optimalizován na vícejádrové procesory</title>
+			<link>http://www.root.cz/zpravicky/intel-android-dosud-neni-optimalizovan-na-vice-jadrove-procesory/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Intel přišel se zajímavým zdůvodněním, proč neustále prosazuje do mobilních zařízení jednojádrový procesor Medfield. Dle jeho interních výzkumů není OS Android na vícejádrové procesory dostatečně optimalizovaný a využití takovéhoto procesoru je...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Tue, 12 Jun 2012 11:59:31 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26737</guid>
+		</item>
+		<item>
+			<title>Pirátské fórum warezsk.com je na prodej</title>
+			<link>http://www.root.cz/zpravicky/piratske-forum-warezsk-com-je-na-prodej/#utm_source=rss&amp;utm_medium=text&amp;utm_campaign=rss</link>
+			<description>Fórum Warezsk.com je na prodej. Jeho dosavadní provozovatelé o tom registrované uživatele včera informovali hromadným e-mailem. Jde o jedno z mnoha fór na česko-slovenské resp. slovensko-české internetové scéně sloužící ke sdílení odkazů na...</description>
+<author>redakce@root.cz (Root.cz: Kamil Pošvic)</author><pubDate>Tue, 12 Jun 2012 10:41:45 GMT</pubDate>			<guid isPermaLink="false">www.root.cz-actuality-26736</guid>
+		</item>
+	</channel>
+</rss>
+
