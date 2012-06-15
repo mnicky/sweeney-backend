@@ -153,7 +153,7 @@
 
 (defn min-size
   "Returns the core number of threads, which are the threads that aren't
-  terminated even when they are idle."
+  terminated even when they are idle (unless the pool is of :variable type)."
   [pool]
   (.getCorePoolSize pool))
 

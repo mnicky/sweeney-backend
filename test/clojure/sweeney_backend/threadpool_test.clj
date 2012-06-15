@@ -1,20 +1,22 @@
 (ns sweeney-backend.threadpool-test
   (:use clojure.test
-        sweeney-backend.threadpool)
-  (:import [java.util.concurrent TimeUnit]))
+        sweeney-backend.threadpool))
 
 (deftest mk-pool-test
   (let [fixed-pool (mk-pool :fixed :size 5)]
     (is (instance? java.util.concurrent.ThreadPoolExecutor fixed-pool))
-    (is (= 5 (.getCorePoolSize fixed-pool))))
+    (is (= 5 (min-size fixed-pool)))
+    (is (= 5 (max-size fixed-pool))))
 
   (let [cached-pool (mk-pool :cached :keepalive 20000)]
     (is (instance? java.util.concurrent.ThreadPoolExecutor cached-pool))
-    (is (= 20000 (.getKeepAliveTime cached-pool TimeUnit/MILLISECONDS))))
+    (is (= 0 (min-size cached-pool)))
+    (is (= 20000 (keepalive-time cached-pool))))
 
-  (let [own-pool (mk-pool :variable :size 3)]
-    (is (instance? java.util.concurrent.ThreadPoolExecutor own-pool))
-    (is (= 3 (.getCorePoolSize own-pool))))
+  (let [variable-pool (mk-pool :variable :size 3)]
+    (is (instance? java.util.concurrent.ThreadPoolExecutor variable-pool))
+    (is (= 3 (min-size variable-pool)))
+    (is (= 3 (max-size variable-pool))))
 
   (is (thrown? RuntimeException (mk-pool :undefined))))
 
