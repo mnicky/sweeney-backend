@@ -1,7 +1,7 @@
 ; Heavily inspired by dispatch example from ClojureScript One, available at:
 ; https://github.com/brentonashworth/one/blob/master/src/lib/cljs/one/dispatch.cljs
 (ns sweeney-backend.events
-  (:require [sweeney-backend.threadpool :as t])
+  (:require [sweeney-backend.threadpool :as threadpool])
   (:use [clojure.core.incubator :only [dissoc-in]]))
 
 (defrecord ActionPack [actions last-id threadpool])
@@ -94,4 +94,4 @@
     (into {}
       (for [action matches]
         (let [[action-id {fun :fun}] action]
-          [action-id (t/submit pool #(fun event-id event-data))])))))
+          [action-id (threadpool/submit pool #(fun event-id event-data))])))))
