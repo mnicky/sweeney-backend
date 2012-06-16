@@ -10,11 +10,11 @@
   [story feed-id]
   (let [{:keys [feed-type title url description published-at]} story]
     (insert :stories (values {:feed_id feed-id
-                               :feed_type feed-type
-                               :title title
-                               :url url
-                               :description description
-                               :published_at published-at}))))
+                              :feed_type feed-type
+                              :title title
+                              :url url
+                              :description description
+                              :published_at published-at}))))
 
 (defn parse-feed
   "Parses the feed at the given url and returns lazy seq of its entries."

@@ -1,6 +1,6 @@
 (ns sweeney-backend.threadpool
   (:import [java.util.concurrent Callable Executors ThreadPoolExecutor TimeUnit TimeoutException]
-            [sweeney_backend.threadpool ConfigurableThreadFactory]))
+           [sweeney_backend.threadpool ConfigurableThreadFactory]))
 
 (defn cpu-count
   "Returns the number of CPUs on this machine."
@@ -194,14 +194,13 @@
   [fut]
   (reify
     clojure.lang.IDeref
-    (deref [_] (.get fut))
+      (deref [_] (.get fut))
     clojure.lang.IBlockingDeref
-    (deref
-     [_ timeout-ms timeout-val]
-     (try (.get fut timeout-ms TimeUnit/MILLISECONDS)
-          (catch TimeoutException e timeout-val)))
+      (deref [_ timeout-ms timeout-val]
+        (try (.get fut timeout-ms TimeUnit/MILLISECONDS)
+             (catch TimeoutException e timeout-val)))
     clojure.lang.IPending
-    (isRealized [_] (.isDone fut))
+      (isRealized [_] (.isDone fut))
     java.util.concurrent.Future
       (get [_] (.get fut))
       (get [_ timeout unit] (.get fut timeout unit))

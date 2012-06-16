@@ -50,8 +50,8 @@
   ([action-pack event-pred f desc]
     (let [action (Action. event-pred f desc)]
       (:last-id (swap! action-pack #(let [id (inc (:last-id %))]
-                                        (-> % (assoc-in [:actions id] action)
-                                        (assoc-in [:last-id] id))))))))
+                                      (-> % (assoc-in [:actions id] action)
+                                      (assoc-in [:last-id] id))))))))
 
 (defn remove-action
   "Deletes action with specified `id` from `action-pack` and returns it.
