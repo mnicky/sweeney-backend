@@ -7,7 +7,7 @@
   []
   (.availableProcessors (Runtime/getRuntime)))
 
-(defn mk-pool
+(defn t-pool
   "Creates and return a new thread pool. The `type` can be:
 
   :fixed  - Thread pool with fixed number of threads and unbounded task queue.
@@ -62,22 +62,22 @@
   for all available parameters.
 
   Examples:
-            (mk-pool)
+            (t-pool)
 
-            (mk-pool :fixed)
-            (mk-pool :fixed :daemon true :prefix \"event-manager\")
-            (mk-pool :fixed :size 5)
-            (mk-pool :fixed :size 8 :daemon true)
+            (t-pool :fixed)
+            (t-pool :fixed :daemon true :prefix \"event-manager\")
+            (t-pool :fixed :size 5)
+            (t-pool :fixed :size 8 :daemon true)
 
-            (mk-pool :cached)
-            (mk-pool :cached :prefix \"server\")
-            (mk-pool :cached :keepalive 60000)
+            (t-pool :cached)
+            (t-pool :cached :prefix \"server\")
+            (t-pool :cached :keepalive 60000)
 
-            (mk-pool :variable :size 8)
-            (mk-pool :variable :size 10 :keepalive 30000 :daemon true)
+            (t-pool :variable :size 8)
+            (t-pool :variable :size 10 :keepalive 30000 :daemon true)
   "
   ([]
-    (mk-pool :fixed))
+    (t-pool :fixed))
   ([type & {:keys [size max keepalive daemon prefix]
             :or    {size (+ (cpu-count) 2)
                     keepalive 15000

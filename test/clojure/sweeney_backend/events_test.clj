@@ -4,7 +4,7 @@
         sweeney-backend.events))
 
 (deftest add-action-test
-  (let [actions (init-action-pack (threadpool/mk-pool))]
+  (let [actions (init-action-pack (threadpool/t-pool))]
     (is (= 0 (:last-id @actions)))
 
     (is (= 1 (add-action actions identity (fn [x y] "example-action") "description")))
@@ -20,7 +20,7 @@
     (is (= 2 (:last-id @actions)))))
 
 (deftest remove-action-test
-  (let [actions (init-action-pack (threadpool/mk-pool))]
+  (let [actions (init-action-pack (threadpool/t-pool))]
     (add-action actions identity (fn [x y] "example-action"))
     (is (contains? (:actions @actions) 1))
 
@@ -29,7 +29,7 @@
     (is (nil? (:fun (remove-action actions 2))))))
 
 (deftest fire-test
-  (let [actions (init-action-pack (threadpool/mk-pool))]
+  (let [actions (init-action-pack (threadpool/t-pool))]
     (add-action actions #{:event1} (fn [x y] "value1"))
     (add-action actions #{:event2} (fn [x y] "value2"))
     (add-action actions #{:event2} (fn [x y] "value3"))
