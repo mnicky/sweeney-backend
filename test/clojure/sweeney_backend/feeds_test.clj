@@ -10,25 +10,44 @@
 
 (def test-db {:classname "org.sqlite.JDBC"
               :subprotocol "sqlite"
-              :subname ":memory:"
+              :subname "test/resources/test-db"
               :user "test"
               :password "test"})
 
 (def test-db-pool (delay (db-pool test-db)))
 
+(defn drop-test-tables
+  [db-conn]
+  (jdbc/with-connection db-conn
+      (jdbc/drop-table :rss_feeds)
+      (jdbc/drop-table :stories)))
+
 (defn create-test-tables
   [db-conn]
   (jdbc/with-connection db-conn
-    (jdbc/create-table :stories
-                       [:id :integer]
-                       [:feed_id :integer]
-                       [:feed_type :text]
-                       [:title :text]
-                       [:url :text]
-                       [:description :text]
-                       [:published_at :date])))
+    (jdbc/transaction
+      (jdbc/create-table :rss_feeds
+                         [:id :integer]
+                         [:url :text]
+                         [:title :text]
+                         [:link :text]
+                         [:image :text])
+      (jdbc/create-table :stories
+                         [:id :integer]
+                         [:feed_id :integer]
+                         [:feed_type :text]
+                         [:title :text]
+                         [:url :text]
+                         [:description :text]
+                         [:published_at :date]))))
 
-(use-fixtures :once (fn [x] (create-test-tables @test-db-pool) (x)))
+(use-fixtures :once
+              (fn [x]
+                (create-test-tables @test-db-pool)
+                (try
+                  (x)
+                  (finally
+                    (drop-test-tables @test-db-pool)))))
 
 (deftest parse-feed-test
   (let [feed (io/file rss-file)]
@@ -46,7 +65,7 @@
       (is (= (:published_at article) #inst "2012-06-15T14:53:13.000-00:00")))))
 
 (deftest save-story-test
-  (let [story (Story. "test-feed-type" "test-feed-title" "test-feed-url" "test-feed-description" #inst "2012-01-01T12:00")]
+  (let [story (Story. "test feed type" "test story title" "http://example.com/story" "test story description" #inst "2012-01-01T12:00")]
     (save-story @test-db-pool story 12)
     (jdbc/with-connection @test-db-pool
       (jdbc/with-query-results res
@@ -54,8 +73,17 @@
         (is (= (first res)
                {:id nil
                 :feed_id 12
-                :feed_type "test-feed-type"
-                :title "test-feed-title"
-                :url "test-feed-url"
-                :description "test-feed-description"
+                :feed_type "test feed type"
+                :title "test story title"
+                :url "http://example.com/story"
+                :description "test story description"
                 :published_at (.getTime #inst "2012-01-01T12:00")} ))))))
+
+(deftest fine-feed-by-url-test
+  (jdbc/with-connection @test-db-pool
+    (jdbc/insert-record :rss_feeds {:id 87
+                                    :url "http://example.com/feed.xml"
+                                    :title "test title"
+                                    :link "http://example.com"
+                                    :image "http://example.com/feed.png"})
+    (is (= 87 (:id (find-feed-by-url @test-db-pool "http://example.com/feed.xml"))))))
