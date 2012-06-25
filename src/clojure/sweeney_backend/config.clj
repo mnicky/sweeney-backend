@@ -9,6 +9,7 @@
               :user "postgres"
               :password ""})
 
-(def db-pool (delay (dbpool/db-pool db-spec)))
+(def db-pool (delay (dbpool/db-pool db-spec :min-pool-size 3
+                                            :max-pool-size 15)))
 
-(def action-pack (events/init-action-pack (threadpool/t-pool :fixed)))
+(def actions (events/init-action-pack (threadpool/t-pool :variable :size 6)))
