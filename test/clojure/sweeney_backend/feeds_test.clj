@@ -4,7 +4,8 @@
   (:use clojure.test
         sweeney-backend.feeds
         sweeney-backend.dbpool)
-  (:import sweeney_backend.feeds.Story))
+  (:import sweeney_backend.feeds.Story)
+  (:import sweeney_backend.feeds.Feed))
 
 (def rss-file "./test/resources/test-rss1.xml")
 
@@ -79,12 +80,25 @@
                 :description "test story description"
                 :published_at (.getTime #inst "2012-01-01T12:00")} ))))))
 
-(deftest fine-feed-by-url-test
+(deftest add-feed-test
+  (let [feed (Feed. "http://testfeed.com/feed.xml" "testfeed title" "http://testfeed.com" "http://testfeed.com/feed.png")]
+    (add-feed @test-db-pool feed)
+    (jdbc/with-connection @test-db-pool
+      (jdbc/with-query-results res
+        ["SELECT * FROM rss_feeds WHERE link=? LIMIT 1" "http://testfeed.com"]
+        (is (= (first res)
+               {:id nil
+                :url "http://testfeed.com/feed.xml"
+                :title "testfeed title"
+                :link "http://testfeed.com"
+                :image "http://testfeed.com/feed.png"} ))))))
+
+(deftest find-feed-by-url-test
   (jdbc/with-connection @test-db-pool
-    (jdbc/insert-record :rss_feeds {:id 87
-                                    :url "http://example.com/feed.xml"
-                                    :title "test title"
-                                    :link "http://example.com"
-                                    :image "http://example.com/feed.png"})
+    (jdbc/insert-record :rss_feeds (assoc (Feed. "http://example.com/feed.xml"
+                                                 "example title"
+                                                 "http://example.com"
+                                                 "http://example.com/feed.png")
+                                          :id 87))
     (is (= 87 (:id (find-feed-by-url @test-db-pool "http://example.com/feed.xml"))))
     (is (= nil (find-feed-by-url @test-db-pool "http://nonexistent.com/feed.xml")))))
