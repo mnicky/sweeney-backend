@@ -27,13 +27,13 @@
   (jdbc/with-connection db-conn
     (jdbc/transaction
       (jdbc/create-table :rss_feeds
-                         [:id :integer]
+                         [:id "INTEGER PRIMARY KEY AUTOINCREMENT"]
                          [:url :text]
                          [:title :text]
                          [:link :text]
                          [:image :text])
       (jdbc/create-table :stories
-                         [:id :integer]
+                         [:id "INTEGER PRIMARY KEY AUTOINCREMENT"]
                          [:feed_id :integer]
                          [:feed_type :text]
                          [:title :text]
