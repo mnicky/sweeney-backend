@@ -6,7 +6,7 @@
 (defrecord Story [feed_type title url description published_at])
 
 (defn save-story
-  "Add the story to the database with specified feed-id using db-connection."
+  "Adds the `story` to the database with specified `feed-id` using `db-connection`."
   [db-connection story feed-id]
     (jdbc/with-connection
       db-connection
@@ -14,7 +14,7 @@
         (jdbc/insert-record :stories (assoc story :feed_id feed-id)))))
 
 (defn parse-feed
-  "Parses the feed at the given url and returns lazy seq of its entries
+  "Parses the feed at the given `url` and returns lazy seq of its entries
   as instances of Story."
   [url]
   (let [feed (parser/parse-feed url)
@@ -27,3 +27,15 @@
                        :url link
                        :description (or (:value (first contents)) (:value description) "")
                        :published_at (utils/to-sql-date (or updated-date published-date feed-published))})))))
+
+(defn find-feed-by-url
+  "Returns map of columns of rss_feed with given `url` using given `db-connection`"
+  [db-connection url]
+  (jdbc/with-connection db-connection
+    (jdbc/with-query-results res
+      [(str "SELECT id, url, title, link, image "
+            "FROM rss_feeds "
+            "WHERE url=? "
+            "LIMIT 1")
+       url]
+      (first res))))
