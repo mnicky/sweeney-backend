@@ -5,7 +5,7 @@
 
 (defrecord Story [feed_type title url description published_at])
 
-(defn save-story
+(defn add-story
   "Adds the `story` to the database with specified `feed-id` using `db-connection`."
   [db-connection story feed-id]
     (jdbc/with-connection

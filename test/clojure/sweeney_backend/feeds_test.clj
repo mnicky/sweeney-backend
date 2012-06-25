@@ -64,12 +64,12 @@
       (is (= (:description article) "Vyšla nová verze internetového prohlížeče Opera 12. Kromě nové podpory snadné změny vzhledu je zde i množství technických věcí, které nejsou na první pohled vidět. Například rychlejší start i s množstvím panelů, oddělení pluginů do samostatných..."))
       (is (= (:published_at article) #inst "2012-06-15T14:53:13.000-00:00")))))
 
-(deftest save-story-test
+(deftest add-story-test
   (let [story (Story. "test feed type" "test story title" "http://example.com/story" "test story description" #inst "2012-01-01T12:00")]
-    (save-story @test-db-pool story 12)
+    (add-story @test-db-pool story 12)
     (jdbc/with-connection @test-db-pool
       (jdbc/with-query-results res
-        ["SELECT * FROM stories LIMIT 1"]
+        ["SELECT * FROM stories WHERE feed_id=? LIMIT 1" 12]
         (is (= (first res)
                {:id nil
                 :feed_id 12
