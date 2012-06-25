@@ -1,7 +1,7 @@
 (ns sweeney-backend.feeds
-  (:require [sweeney-backend.utils :as utils])
-  (:require [feedparser-clj.core :as parser])
-  (:require [clojure.java.jdbc :as jdbc]))
+  (:require [sweeney-backend.utils :as utils]
+            [feedparser-clj.core :as parser]
+            [clojure.java.jdbc :as jdbc]))
 
 (defrecord Story [feed_type title url description published_at])
 (defrecord Feed [url title link image])

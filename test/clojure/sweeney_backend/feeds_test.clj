@@ -1,11 +1,10 @@
 (ns sweeney-backend.feeds-test
-  (:require [clojure.java.io :as io])
-  (:require [clojure.java.jdbc :as jdbc])
+  (:require [clojure.java.io :as io]
+            [clojure.java.jdbc :as jdbc])
   (:use clojure.test
         sweeney-backend.feeds
         sweeney-backend.dbpool)
-  (:import sweeney_backend.feeds.Story)
-  (:import sweeney_backend.feeds.Feed))
+  (:import [sweeney_backend.feeds Feed Story]))
 
 (def rss-file "./test/resources/test-rss1.xml")
 
