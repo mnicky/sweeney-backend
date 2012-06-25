@@ -86,4 +86,5 @@
                                     :title "test title"
                                     :link "http://example.com"
                                     :image "http://example.com/feed.png"})
-    (is (= 87 (:id (find-feed-by-url @test-db-pool "http://example.com/feed.xml"))))))
+    (is (= 87 (:id (find-feed-by-url @test-db-pool "http://example.com/feed.xml"))))
+    (is (= nil (find-feed-by-url @test-db-pool "http://nonexistent.com/feed.xml")))))

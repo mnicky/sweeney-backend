@@ -29,7 +29,8 @@
                        :published_at (utils/to-sql-date (or updated-date published-date feed-published))})))))
 
 (defn find-feed-by-url
-  "Returns map of columns of rss_feed with given `url` using given `db-connection`"
+  "Returns map of columns of rss_feeds table with given `url` using given
+  `db-connection`. If no rss feed with that `url` exists, returns nil."
   [db-connection url]
   (jdbc/with-connection db-connection
     (jdbc/with-query-results res
