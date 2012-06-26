@@ -6,7 +6,7 @@
 
 (defonce dev-db {:classname "org.postgresql.Driver"
                  :subprotocol "postgresql"
-                 :subname "sweeney-frontend_development"
+                 :subname "//localhost:5432/sweeney-frontend_development"
                  :user "postgres"
                  :password ""})
 
