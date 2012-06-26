@@ -54,7 +54,7 @@
     (is (instance? java.io.File feed))
     (is (.exists feed))
 
-    (check-feed @test-db-pool feed)
+    (is (number? (check-feed @test-db-pool feed)))
 
     (jdbc/with-connection @test-db-pool
       (jdbc/with-query-results res ["SELECT * FROM rss_feeds"]
