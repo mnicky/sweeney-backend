@@ -38,7 +38,7 @@
                                  :title title
                                  :url link
                                  :description (or (:value (first contents)) (:value description) "")
-                                 :published_at (utils/to-sql-date (or updated-date published-date feed-published))})))
+                                 :published_at (utils/to-timestamp (or updated-date published-date feed-published))})))
      :info info}))
 
 (defn find-feed-by-url

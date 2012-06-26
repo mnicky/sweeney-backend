@@ -57,8 +57,9 @@
   (let [times (jdbc/with-connection db
                 (jdbc/with-query-results res
                   ["SELECT published_at FROM stories WHERE feed_id=? ORDER BY published_at DESC LIMIT ?" feed-id (inc last-n)]
-                  (mapcat vals (vec res))))]
-    (/ (reduce + (map - times (rest times))) last-n)))
+                  (mapcat vals (vec res))))
+        millis (if (number? (first times)) times (map #(.getTime %) times))] ;convert if is java.sql.Timestamp
+    (/ (reduce + (map - millis (rest millis))) last-n)))
 
 (defn check-feed-action
   "Checks the feed with given `url` and schedules the next check according

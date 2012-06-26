@@ -1,12 +1,12 @@
 (ns sweeney-backend.utils
-  (:import [java.sql Date]))
+  (:import [java.sql Timestamp]))
 
 (defn now
   "Returns the current time in milliseconds, measured from 1.1.1970 0:00 UTC."
   []
   (System/currentTimeMillis))
 
-(defn to-sql-date
+(defn to-timestamp
   "Converts java.util.Date to java.sql.Date."
   [date]
-  (Date. (.getTime date)))
+  (Timestamp. (.getTime date)))
