@@ -42,7 +42,8 @@
   [db url]
   (let [{:keys [info stories]} (feeds/parse-feed url)
         feed-id (or (:id (feeds/find-feed-by-url db url))
-                    ((keyword "last_insert_rowid()") (feeds/add-feed db info)))]
+                    (let [ret-val (feeds/add-feed db info)]
+                      (or (:id ret-val) ((keyword "last_insert_rowid()") ret-val))))]
     (doseq [story stories]
       (when-not (feeds/find-story-by-url db (:url story))
         (feeds/add-story db story feed-id)))
