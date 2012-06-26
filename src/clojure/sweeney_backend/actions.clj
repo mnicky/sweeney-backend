@@ -1,5 +1,6 @@
 (ns sweeney-backend.actions
   (:require [overtone.at-at :as at]
+            [clojure.java.jdbc :as jdbc]
             [sweeney-backend.events :as events]
             [sweeney-backend.feeds :as feeds])
   (:import [sweeney_backend.feeds Feed Story]))
@@ -16,3 +17,15 @@
     (doseq [story stories]
       (when-not (feeds/find-story-by-url db (:url story))
         (feeds/add-story db story feed-id)))))
+
+(defn avg-story-period
+  "Returns average period of publishing new stories for the feed with given
+  `feed-id` in milliseconds, using the `last-n` stories from the database
+  with specified `db` connection."
+  [db feed-id last-n]
+  {:pre [(not (zero? last-n))]}
+  (let [times (jdbc/with-connection db
+                (jdbc/with-query-results res
+                  ["SELECT published_at FROM stories WHERE feed_id=? ORDER BY published_at DESC LIMIT ?" feed-id (inc last-n)]
+                  (mapcat vals (vec res))))]
+    (/ (reduce + (map - times (rest times))) last-n)))

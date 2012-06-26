@@ -84,3 +84,11 @@
 
 ;the same test, to test whether check-feed ignores feeds and stories if already present
 (deftest check-feed-test-2 (check-feed-test-fn))
+
+(deftest avg-story-period-test
+  (let [feed (io/file rss-file)]
+    (is (instance? java.io.File feed))
+    (is (.exists feed))
+
+    (check-feed @test-db-pool feed)
+    (is (= 13882000/3 (avg-story-period @test-db-pool 1 3)))))

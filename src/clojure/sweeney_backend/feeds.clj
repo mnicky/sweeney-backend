@@ -47,7 +47,7 @@
   [db-connection url]
   (jdbc/with-connection db-connection
     (jdbc/with-query-results res
-      ["SELECT id, url, title, link, image FROM rss_feeds WHERE url=? LIMIT 1" url]
+      ["SELECT id, url, title, link, image FROM rss_feeds WHERE url = ? LIMIT 1" url]
       (first res))))
 
 (defn find-story-by-url
@@ -56,5 +56,5 @@
   [db-connection url]
   (jdbc/with-connection db-connection
     (jdbc/with-query-results res
-      ["SELECT id, feed_id, feed_type, title, url, description, published_at FROM stories WHERE url=? LIMIT 1" url]
+      ["SELECT id, feed_id, feed_type, title, url, description, published_at FROM stories WHERE url = ? LIMIT 1" url]
       (first res))))
