@@ -1,9 +1,36 @@
 (ns sweeney-backend.actions
   (:require [overtone.at-at :as at]
             [clojure.java.jdbc :as jdbc]
+            [sweeney-backend.config :as config]
             [sweeney-backend.events :as events]
-            [sweeney-backend.feeds :as feeds])
-  (:import [sweeney_backend.feeds Feed Story]))
+            [sweeney-backend.feeds :as feeds]))
+
+;remake of sweeney-backend.events functions that work on the config/event-pool
+
+(defn add-action
+  "The same as events/add-action but works on the config/event-pool."
+  ([event-pred f]
+    (events/add-action config/event-pool event-pred f))
+  ([event-pred f desc]
+    (events/add-action config/event-pool event-pred f desc)))
+
+(defn remove-action
+  "The same as events/remove-action but works on the config/event-pool."
+  [id]
+  (events/remove-action config/event-pool id))
+
+(defn remove-action-by-desc
+  "The same as events/remove-action-by-desc but works on the config/event-pool."
+  [desc]
+  (events/remove-action-by-desc config/event-pool desc))
+
+(defn fire
+  "The same as events/fire but works on the config/event-pool."
+  [event-id event-data]
+  (events/fire config/event-pool event-id event-data))
+
+
+;domain specific functions and actions
 
 (defn check-feed
   "Performs check of the feed with the specified `url`. This check will:
@@ -32,3 +59,25 @@
                   ["SELECT published_at FROM stories WHERE feed_id=? ORDER BY published_at DESC LIMIT ?" feed-id (inc last-n)]
                   (mapcat vals (vec res))))]
     (/ (reduce + (map - times (rest times))) last-n)))
+
+(defn check-feed-action
+  "Checks the feed with given `url` and schedules the next check according
+  to the average publishing period for that feed. Returns the feed_id
+  of checked feed.
+
+  Should be used as an action with `sweeney-backend.events` framework and
+  not called directly.
+
+  This action uses these configuration options:
+    - config/db-pool
+    - config/event-pool
+    - config/scheduled-pool
+    - config/last-n-stories
+    - config/min-period
+  "
+  [event url]
+  (let [feed-id (check-feed @config/db-pool url)
+        avg-period (avg-story-period @config/db-pool feed-id config/last-n-stories)
+        period (if (< avg-period config/min-period) config/min-period avg-period)]
+    (at/after period #(events/fire config/event-pool event url) config/scheduled-pool :desc (str "fire the check of " url))
+    feed-id))

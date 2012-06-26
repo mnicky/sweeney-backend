@@ -1,15 +1,22 @@
 (ns sweeney-backend.config
   (:require [sweeney-backend.dbpool :as dbpool]
             [sweeney-backend.events :as events]
-            [sweeney-backend.threadpool :as threadpool]))
+            [sweeney-backend.threadpool :as threadpool]
+            [overtone.at-at :as at]))
 
-(def db-spec {:classname "org.postgresql.JDBC"
-              :subprotocol "postgresql"
-              :subname "sweeney-frontend_development"
-              :user "postgres"
-              :password ""})
+(defonce dev-db {:classname "org.postgresql.Driver"
+                 :subprotocol "postgresql"
+                 :subname "sweeney-frontend_development"
+                 :user "postgres"
+                 :password ""})
 
-(def db-pool (delay (dbpool/db-pool db-spec :min-pool-size 3
-                                            :max-pool-size 15)))
+(defonce db-pool (delay (dbpool/db-pool dev-db :min-pool-size 3
+                                           :max-pool-size 15)))
 
-(def actions (events/init-action-pack (threadpool/t-pool :variable :size 6)))
+(defonce event-pool (events/init-action-pack (threadpool/t-pool :variable :size 6)))
+
+(defonce scheduled-pool (at/mk-pool :cpu-count (threadpool/cpu-count)))
+
+(defonce last-n-stories 5)
+
+(defonce min-period (* 1000 60 15))
