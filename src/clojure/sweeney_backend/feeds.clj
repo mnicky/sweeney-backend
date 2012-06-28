@@ -25,7 +25,7 @@
     :info - information about the feed as instance of Feed
     :stories - lazy seq of feed's entries as instances of Story"
   [url]
-  {:pre [(string? url)]}
+  {:pre [(or (string? url) (instance? java.io.File url))]}
   (let [feed (parser/parse-feed url)
         {:keys [entries image link published-date title uri]} feed
         info (Feed/create {:url url
