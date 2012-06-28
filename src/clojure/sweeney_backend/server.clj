@@ -9,8 +9,8 @@
            [org.codehaus.jackson JsonParseException]
            [com.sun.syndication.io ParsingFeedException]))
 
-(def ^:dynamic *server*
-  "Var containing the running server."
+(defonce ^:dynamic *server*
+  ;^{:doc "Var containing the running server."}
   nil)
 
 (defn error-response
@@ -25,6 +25,32 @@
      :headers {"Content-Type" "application/json;charset=utf-8"}
      :body (json/generate-string body)}))
 
+(defn get-root-cause
+  "Returns root cause of the supplied exception."
+  [e]
+  {:pre [(instance? Throwable e)]}
+  (if-not (.getCause e)
+    e
+    (recur (.getCause e))))
+
+(defn cond-error
+  "Returns information according to the type of the error."
+  [e]
+  (condp instance? e
+    JsonParseException    {:status "error" :type "malformed-request"}
+    AssertionError        {:status "error" :type "malformed-request"}
+
+    MalformedURLException {:status "error" :type "malformed-url"}
+
+    UnknownHostException  {:status "error" :type "not-found"}
+    FileNotFoundException {:status "error" :type "not-found"}
+
+    ParsingFeedException  {:status "error" :type "malformed-feed"}
+    SAXParseException     {:status "error" :type "malformed-feed"}
+
+                          {:status "error" :type "other"}
+   ))
+
 (defn wrap-errors
   "Wraps the handler to return an appropriate response on error."
   [handler]
@@ -32,21 +58,7 @@
     (try
       (handler request)
       (catch Throwable e
-        (error-response e
-          (condp instance? e
-            JsonParseException    {:status "error" :type "malformed-request"}
-            AssertionError        {:status "error" :type "malformed-request"}
-
-            MalformedURLException {:status "error" :type "malformed-url"}
-
-            UnknownHostException  {:status "error" :type "not-found"}
-            FileNotFoundException {:status "error" :type "not-found"}
-
-            ParsingFeedException  {:status "error" :type "malformed-feed"}
-            SAXParseException     {:status "error" :type "malformed-feed"}
-
-                                  {:status "error" :type "other"}
-           ))))))
+        (error-response e (cond-error (get-root-cause e)))))))
 
 (defn set-server
   "Atomically sets the *sever* var to the given `value`."
