@@ -12,17 +12,16 @@
    :user "postgres"
    :password ""})
 
-(def db-pool
-  ""
-  (delay (dbpool/db-pool dev-db :min-pool-size 3
-                                           :max-pool-size 15)))
+(defonce db-pool
+  ^{:doc ""}
+  (delay (dbpool/db-pool dev-db :min-pool-size 3 :max-pool-size 15)))
 
-(def event-pool
-  ""
+(defonce event-pool
+  ^{:doc ""}
   (events/init-action-pack (threadpool/t-pool :variable :size 6)))
 
-(def scheduled-pool
-  ""
+(defonce scheduled-pool
+  ^{:doc ""}
   (at/mk-pool :cpu-count (threadpool/cpu-count)))
 
 (def last-n-stories

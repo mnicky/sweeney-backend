@@ -51,6 +51,15 @@
       ["SELECT id, url, title, link, image FROM rss_feeds WHERE url = ? LIMIT 1" url]
       (first res))))
 
+(defn find-feed-by-id
+  "Returns map of columns of `rss_feeds` table with given `id` using given
+  `db-connection`. If no rss feed with given `id` exists, returns nil."
+  [db-connection id]
+  (jdbc/with-connection db-connection
+    (jdbc/with-query-results res
+      ["SELECT id, url, title, link, image FROM rss_feeds WHERE id = ? LIMIT 1" id]
+      (first res))))
+
 (defn find-story-by-url
   "Returns map of columns of `stories` table with given `url` using given
   `db-connection`. If no story with given `url` exists, returns nil."

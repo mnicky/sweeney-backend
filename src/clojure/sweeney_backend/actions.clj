@@ -38,16 +38,21 @@
     - add this feed to the database if not present
     - add all stories of this feed to the database if not present
 
-  Returns the `feed_id` of the checked feed."
+  Returns the map, containing these keys:
+    :feed_id        - a feed-id of the checked feed
+    :checked-before - a boolean value, specifying whether the feed has been
+                      already checked before
+  "
   [db url]
   (let [{:keys [info stories]} (feeds/parse-feed url)
-        feed-id (or (:id (feeds/find-feed-by-url db url))
+        feed-id-known (:id (feeds/find-feed-by-url db url))
+        feed-id (or feed-id-known
                     (let [ret-val (feeds/add-feed db info)]
                       (or (:id ret-val) ((keyword "last_insert_rowid()") ret-val))))]
     (doseq [story stories]
       (when-not (feeds/find-story-by-url db (:url story))
         (feeds/add-story db story feed-id)))
-    feed-id))
+    {:feed-id feed-id :checked-before (boolean feed-id-known)}))
 
 (defn avg-story-period
   "Returns average period of publishing new stories for the feed with given
@@ -59,7 +64,7 @@
                 (jdbc/with-query-results res
                   ["SELECT published_at FROM stories WHERE feed_id=? ORDER BY published_at DESC LIMIT ?" feed-id (inc last-n)]
                   (mapcat vals (vec res))))
-        millis (if (number? (first times)) times (map #(.getTime %) times))] ;convert if is java.sql.Timestamp
+        millis (if (number? (first times)) times (map #(.getTime %) times))] ;convert if not in milliseconds
     (/ (reduce + (map - millis (rest millis))) last-n)))
 
 (defn check-feed-action
@@ -70,7 +75,7 @@
   Should be used as an action with `sweeney-backend.events` framework and
   not called directly.
 
-  This action uses these configuration options:
+  This function uses these configuration options:
     - config/db-pool
     - config/event-pool
     - config/scheduled-pool
@@ -78,8 +83,9 @@
     - config/min-period
   "
   [event url]
-  (let [feed-id (check-feed @config/db-pool url)
-        avg-period (avg-story-period @config/db-pool feed-id config/last-n-stories)
-        period (if (< avg-period config/min-period) config/min-period avg-period)]
-    (at/after period #(events/fire config/event-pool event url) config/scheduled-pool :desc (str "fire the check of " url))
+  (let [{:keys [feed-id checked-before]} (check-feed @config/db-pool url)]
+    (when-not checked-before
+      (let [avg-period (avg-story-period @config/db-pool feed-id config/last-n-stories)
+            period (if (< avg-period config/min-period) config/min-period avg-period)]
+        (at/after period #(events/fire config/event-pool event url) config/scheduled-pool :desc (str "fire the check of " url))))
     feed-id))

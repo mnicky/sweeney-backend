@@ -110,6 +110,16 @@
     (is (= 87 (:id (find-feed-by-url @test-db-pool "http://example.com/feed.xml"))))
     (is (= nil (find-feed-by-url @test-db-pool "http://nonexistent.com/feed.xml")))))
 
+(deftest find-feed-by-id-test
+  (jdbc/with-connection @test-db-pool
+    (jdbc/insert-record :rss_feeds (assoc (Feed. "http://example2.com/feed2.xml"
+                                                 "example2 title"
+                                                 "http://example2.com"
+                                                 "http://example2.com/feed2.png")
+                                          :id 92))
+    (is (= 92 (:id (find-feed-by-id @test-db-pool 92))))
+    (is (= nil (find-feed-by-url @test-db-pool 999)))))
+
 (deftest find-story-by-url-test
   (jdbc/with-connection @test-db-pool
     (jdbc/insert-record :stories (assoc (Story. "test feed type"

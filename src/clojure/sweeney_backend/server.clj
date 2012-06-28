@@ -49,7 +49,7 @@
            ))))))
 
 (defn set-server
-  "Atomicaly sets the *sever* var to the given `value`."
+  "Atomically sets the *sever* var to the given `value`."
   [value]
   (alter-var-root (var *server*) (fn [_] value)))
 
