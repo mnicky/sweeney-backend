@@ -4,19 +4,43 @@
             [sweeney-backend.threadpool :as threadpool]
             [overtone.at-at :as at]))
 
-(defonce dev-db {:classname "org.postgresql.Driver"
-                 :subprotocol "postgresql"
-                 :subname "//localhost:5432/sweeney-frontend_development"
-                 :user "postgres"
-                 :password ""})
+(def dev-db
+  ""
+  {:classname "org.postgresql.Driver"
+   :subprotocol "postgresql"
+   :subname "//localhost:5432/sweeney-frontend_development"
+   :user "postgres"
+   :password ""})
 
-(defonce db-pool (delay (dbpool/db-pool dev-db :min-pool-size 3
+(def db-pool
+  ""
+  (delay (dbpool/db-pool dev-db :min-pool-size 3
                                            :max-pool-size 15)))
 
-(defonce event-pool (events/init-action-pack (threadpool/t-pool :variable :size 6)))
+(def event-pool
+  ""
+  (events/init-action-pack (threadpool/t-pool :variable :size 6)))
 
-(defonce scheduled-pool (at/mk-pool :cpu-count (threadpool/cpu-count)))
+(def scheduled-pool
+  ""
+  (at/mk-pool :cpu-count (threadpool/cpu-count)))
 
-(defonce last-n-stories 5)
+(def last-n-stories
+  ""
+  5)
 
-(defonce min-period (* 1000 60 15))
+(def min-period
+  ""
+  (* 1000 60 15))
+
+(def server-port
+  ""
+  4242)
+
+(def api-ns
+  ""
+  "sweeney-backend.api")
+
+(def debug
+  ""
+  false)
