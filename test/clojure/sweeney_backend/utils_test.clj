@@ -9,3 +9,6 @@
 
 (deftest to-timestamp-test
   (is (instance? java.sql.Timestamp (to-timestamp (java.util.Date.)))))
+
+(deftest extract-text-test
+  (is (= "Lorem & ipsum, dolor..." (extract-text "<p>Lorem &amp; ipsum,<p attr=\"value\"> dolor<script type=\"text/css\">.selector#id {prop:value}</script>..."))))

@@ -38,7 +38,7 @@
                   (Story/create {:feed_type "RssFeed"
                                  :title title
                                  :url link
-                                 :description (or (:value (first contents)) (:value description) "")
+                                 :description (utils/extract-text (or (:value (first contents)) (:value description) ""))
                                  :published_at (utils/to-timestamp (or updated-date published-date feed-published))})))
      :info info}))
 

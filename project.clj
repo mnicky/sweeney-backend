@@ -12,7 +12,8 @@
                  [clj-json "0.5.0"]
                  [org.clojure/java.jdbc "0.2.3"]
                  [c3p0/c3p0 "0.9.1.2"]
-                 [postgresql/postgresql "9.1-901.jdbc4"]]
+                 [postgresql/postgresql "9.1-901.jdbc4"]
+                 [org.ccil.cowan.tagsoup/tagsoup "1.2.1"]]
   :main sweeney-backend.core
   :profiles {:dev {:dependencies [[org.xerial/sqlite-jdbc "3.7.2"]]
                      ;:warn-on-reflection true

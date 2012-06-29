@@ -1,5 +1,6 @@
 (ns sweeney-backend.utils
-  (:import [java.sql Timestamp]))
+  (:import [java.sql Timestamp]
+           [sweeney_backend.utils Utils]))
 
 (defn now
   "Returns the current time in milliseconds, measured from 1.1.1970 0:00 UTC."
@@ -10,3 +11,8 @@
   "Converts java.util.Date to java.sql.Date."
   [date]
   (Timestamp. (.getTime date)))
+
+(defn extract-text
+  "Extracts plain text from HTML string."
+  [html]
+  (Utils/extractText html))
