@@ -3,14 +3,13 @@
             [sweeney-backend.config :as config]
             [sweeney-backend.feeds :as feeds]))
 
-
 (defn parse-feed!
-  ""
+  "docstring here..."
   [request]
   {:pre [(map? (:body request))]}
-  (let [url ((:body request) "url")]
-    (feeds/parse-feed url)
-    {:status 200 :body {:status "ok"}}
+  (let [url ((:body request) "url")
+        feed (feeds/parse-feed url)]
+    {:status 200 :body {:status "ok" :feed (:info feed)}}
    ))
 
 (defn check-feed!
