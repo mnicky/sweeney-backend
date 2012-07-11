@@ -14,7 +14,7 @@
 
 (defonce db-pool
   ^{:doc ""}
-  (delay (dbpool/db-pool dev-db :min-pool-size 3 :max-pool-size 15)))
+  (delay (dbpool/db-pool dev-db :min-connections 3 :max-connections 15)))
 
 (defonce event-pool
   ^{:doc ""}

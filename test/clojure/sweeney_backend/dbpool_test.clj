@@ -8,12 +8,14 @@
                  :subname ":memory:"
                  :user "test"
                  :password "test"}
-        datasource (:datasource (db-pool db-spec :min-pool-size 5
-                                                 :max-pool-size 20
-                                                 :idle-time 18000
-                                                 :excess-idle-time 1800))]
+        datasource (:datasource (db-pool db-spec :min-connections 5
+                                                 :max-connections 20
+                                                 :partitions 2
+                                                 :connection-timeout 60
+                                                 :pool-name "test-name"))]
     (is (instance? javax.sql.DataSource datasource))
-    (is (= 5 (.getMinPoolSize datasource)))
-    (is (= 20 (.getMaxPoolSize datasource)))
-    (is (= 18000 (.getMaxIdleTime datasource)))
-    (is (= 1800 (.getMaxIdleTimeExcessConnections datasource)))))
+    (is (= 5 (.getMinConnectionsPerPartition datasource)))
+    (is (= 20 (.getMaxConnectionsPerPartition datasource)))
+    (is (= 2 (.getPartitionCount datasource)))
+    (is (= 60 (.getConnectionTimeout datasource java.util.concurrent.TimeUnit/SECONDS)))
+    (is (= "test-name" (.getPoolName datasource)))))

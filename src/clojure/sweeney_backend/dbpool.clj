@@ -1,10 +1,11 @@
 (ns sweeney-backend.dbpool
-  (:import com.mchange.v2.c3p0.ComboPooledDataSource))
+  (:import com.jolbox.bonecp.BoneCPDataSource
+           java.util.concurrent.TimeUnit))
 
 (defn db-pool
-  "Factory for creating a database pool, using c3p0 library. Returns a map
+  "Factory for creating a database pool, using bonecp library. Returns a map
   containing a key :datasource with a new instance of
-  `com.mchange.v2.c3p0.ComboPooledDataSource`.
+  `com.jolbox.bonecp.BoneCPDataSource`.
 
   `spec` is a map of database connection options with these keys:
 
@@ -16,24 +17,29 @@
 
   This function also accepts these optional parameters:
 
-  :min-pool-size - Minimum number of connections a pool will maintain at any
-                   given time. Defaults to 3.
+  :min-connections - Sets the minimum number of connections that
+                     will be contained in every partition.
+                     Defaults to 3.
 
-  :max-pool-size - Maximum number of connections a pool will maintain at any
-                   given time. Defaults to 15.
+  :max-connections - Sets the maximum number of connections that
+                     will be contained in every partition. Setting
+                     this to 5 with 3 partitions means you will
+                     have 15 unique connections to the database.
+                     Defaults to 15.
 
-  :idle-time - Defines how many seconds a connection should be permitted
-               to go unused before being culled from the pool. Zero means
-               idle connections never expire. Defaults to 3 hours.
+  :partitions - The number of partitions to use (see also
+                http://is.gd/bonecp_partitions).
+                Defaults to 1.
 
-  :excess-idle-time - Defines number of seconds that connections in excess
-                      of min-pool-size should be permitted to remain idle
-                      in the pool before being culled. Zero means that
-                      these connections never expire. Defaults to 30 minutes.
+  :connection-timeout - Sets the maximum time (in seconds) to wait before
+                        a call to getConnection is timed out. Setting this
+                        to zero specifies that there is no timeout.
+                        Defaults to 30 seconds.
 
-  (see also: http://is.gd/c3p0_pool_conf)
+  :pool-name - The name of the pool for thread names.
+               Defaults to \"sweeney-backend-dbpool\"
 
-  Examples:
+  Example of use:
 
             (def my-spec
               {:classname \"com.mysql.jdbc.Driver\"
@@ -44,25 +50,28 @@
 
             (def my-pool
               (delay
-                (db-pool my-spec :max-pool-size 30 :idle-time (* 6 60 60))))
+                (db-pool my-spec :max-connections 30)))
 
             And then access `@my-pool` wherever you need access to the pool.
 
   (see also: http://is.gd/clj_jdbc_pool)
   "
-  [spec & {:keys [min-pool-size max-pool-size idle-time excess-idle-time]
-           :or {min-pool-size 3
-                max-pool-size 15
-                idle-time (* 3 60 60)
-                excess-idle-time  (* 30 60)}}]
-  (let [cpds (doto (ComboPooledDataSource.)
+  [spec & {:keys [min-connections max-connections partitions
+                  connection-timeout pool-name]
+           :or {min-connections 3
+                max-connections 15
+                partitions 1
+                connection-timeout 30
+                pool-name "sweeney-backend-dbpool"}}]
+  (let [ds (doto (BoneCPDataSource.)
                (.setDriverClass (:classname spec))
                (.setJdbcUrl (str "jdbc:" (:subprotocol spec) ":" (:subname spec)))
-               (.setUser (:user spec))
+               (.setUsername (:user spec))
                (.setPassword (:password spec))
-               (.setMinPoolSize min-pool-size)
-               (.setInitialPoolSize min-pool-size)
-               (.setMaxPoolSize max-pool-size)
-               (.setMaxIdleTime idle-time)
-               (.setMaxIdleTimeExcessConnections excess-idle-time))]
-    {:datasource cpds}))
+               (.setMinConnectionsPerPartition min-connections)
+               (.setMaxConnectionsPerPartition max-connections)
+               (.setPartitionCount partitions)
+               (.setConnectionTimeout connection-timeout TimeUnit/SECONDS)
+               ;TODO: (.setLazyInit lazy) ?
+               (.setPoolName pool-name))]
+    {:datasource ds}))

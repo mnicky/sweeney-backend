@@ -11,7 +11,8 @@
                  [ring/ring-jetty-adapter "1.1.1"]
                  [clj-json "0.5.0"]
                  [org.clojure/java.jdbc "0.2.3"]
-                 [c3p0/c3p0 "0.9.1.2"]
+                 [com.jolbox/bonecp "0.7.1.RELEASE"]
+                 [org.slf4j/slf4j-simple "1.5.10"]
                  [postgresql/postgresql "9.1-901.jdbc4"]
                  [org.ccil.cowan.tagsoup/tagsoup "1.2.1"]]
   :main sweeney-backend.core
