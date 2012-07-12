@@ -40,6 +40,6 @@
   ""
   "sweeney-backend.api")
 
-(def debug
-  ""
-  false)
+(def log-level
+  "Default log level."
+  :debug)

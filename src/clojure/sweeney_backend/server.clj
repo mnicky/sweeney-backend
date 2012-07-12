@@ -2,7 +2,8 @@
   (:require [wakeful.core :as wakeful]
             [ring.adapter.jetty :as jetty]
             [clj-json.core :as json]
-            [sweeney-backend.config :as config])
+            [sweeney-backend.config :as config]
+            [taoensso.timbre :as log])
   (:import [java.net MalformedURLException UnknownHostException]
            [java.io FileNotFoundException]
            [org.xml.sax SAXParseException]
@@ -16,11 +17,10 @@
 (defn error-response
   [e body]
   "Returns proper JSON response about error e, containing the given body.
-
-  Uses these configuration options:
-    - config/debug
+  If the config/log-level is set to the :debug or higher, then the exception
+  description will be added to the response.
   "
-  (let [body (if config/debug (assoc body :debug (.toString e)) body)]
+  (let [body (if (log/logging-enabled? :debug) (assoc body :debug (.toString e)) body)]
     {:status 200
      :headers {"Content-Type" "application/json;charset=utf-8"}
      :body (json/generate-string body)}))
@@ -58,6 +58,7 @@
     (try
       (handler request)
       (catch Throwable e
+        (log/error e "error caught on the request handler")
         (error-response e (cond-error (get-root-cause e)))))))
 
 (defn set-server
@@ -70,17 +71,39 @@
   [port namesp]
   {:pre [(string? namesp)]}
   (let [handler (wrap-errors (wakeful/wakeful :root namesp))]
-    (jetty/run-jetty handler {:port port :join? false})))
+    (try
+      (log/info "starting the server on port" port)
+      (jetty/run-jetty handler {:port port :join? false})
+    (catch Exception e
+      (log/fatal e "exception caught when starting the server")))))
+
+(defn stop
+  "Stops the server and returns nil."
+  []
+  (try
+    (when *server*
+      (.stop *server*))
+  (finally
+    (set-server nil))))
+
+(defn running?
+  "Returns whether the server is running."
+  []
+  (if *server*
+    (.isRunning *server*)
+    false))
 
 (defn run
   "Runs the server if it's not running yet and returns true. If server
-  wasn't run because it was already runnning, returns nil.
+  wasn't run because it was already running, returns nil.
 
   Uses these configuration options:
     - config/server-port
     - config/api-ns
   "
   []
-  (when (not *server*)
-    (and (set-server (start config/server-port config/api-ns))
-         true)))
+  (if-not *server*
+    (let [server (start config/server-port config/api-ns)]
+      (set-server server)
+      true)
+    (log/info "server not started because it's already running")))
