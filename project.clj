@@ -15,7 +15,7 @@
                  [org.slf4j/slf4j-simple "1.5.10"]
                  [postgresql/postgresql "9.1-901.jdbc4"]
                  [org.ccil.cowan.tagsoup/tagsoup "1.2.1"]
-                 [com.taoensso/timbre "0.6.1"]]
+                 [com.taoensso/timbre "0.7.0"]]
   :main sweeney-backend.core
   :profiles {:dev {:dependencies [[org.xerial/sqlite-jdbc "3.7.2"]]
                      ;:warn-on-reflection true
