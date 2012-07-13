@@ -16,6 +16,5 @@
 (defn -main
   "Main method that will start the backend."
   [& args]
-  (println "Starting Sweeney The Backend...")
   (bootstrap)
  )
