@@ -16,3 +16,9 @@
   "Extracts plain text from HTML string."
   [html]
   (Utils/extractText html))
+
+(defn on-shutdown
+  "Registers function (of zero arguments) as a shutdown hook
+  of current Runtime and returns nil. See also: http://is.gd/shutdown_hook"
+  [f]
+  (.addShutdownHook (Runtime/getRuntime) (Thread. f)))
