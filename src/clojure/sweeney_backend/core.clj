@@ -3,6 +3,7 @@
   (:require [sweeney-backend.actions :as actions]
             [sweeney-backend.config :as config]
             [sweeney-backend.server :as server]
+            [sweeney-backend.utils :as utils]
             [taoensso.timbre :as log]))
 
 (defn bootstrap
@@ -10,6 +11,7 @@
   []
   (log/set-level! config/log-level)
   (actions/add-action #{:check-feed} actions/check-feed-action "check feed")
+  (utils/on-shutdown actions/save-scheduled)
   (server/run)
  )
 

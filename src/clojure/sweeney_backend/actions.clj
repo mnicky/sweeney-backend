@@ -1,9 +1,11 @@
 (ns sweeney-backend.actions
-  (:require [overtone.at-at :as at]
-            [clojure.java.jdbc :as jdbc]
+  (:require [clojure.java.jdbc :as jdbc]
+            [serializable.fn :as serial]
             [sweeney-backend.config :as config]
             [sweeney-backend.events :as events]
-            [sweeney-backend.feeds :as feeds]))
+            [sweeney-backend.feeds :as feeds]
+            [sweeney-backend.utils :as utils])
+  (:import [java.sql Timestamp]))
 
 ;remake of sweeney-backend.events functions that work on the config/event-pool
 
@@ -75,7 +77,7 @@
   Should be used as an action with `sweeney-backend.events` framework and
   not called directly.
 
-  This function uses these configuration options:
+  This function uses these configuration options (directly or indirectly):
     - config/db-pool
     - config/event-pool
     - config/scheduled-pool
@@ -86,6 +88,38 @@
   (let [{:keys [feed-id checked-before]} (check-feed @config/db-pool url)]
     (when-not checked-before
       (let [avg-period (avg-story-period @config/db-pool feed-id config/last-n-stories)
-            period (if (< avg-period config/min-period) config/min-period avg-period)]
-        (at/after period #(events/fire config/event-pool event url) config/scheduled-pool :desc (str "fire the check of " url))))
+            period (if (< avg-period config/min-period) config/min-period avg-period)
+            sched-fn (serial/fn [] (fire event url))]
+        (utils/after period sched-fn config/scheduled-pool :desc (str "fire the check of " url))))
     feed-id))
+
+(defn scheduled-jobs
+  "Returns lazy seq of currently scheduled jobs in the specified scheduled-pool
+  as maps containing the keys :time, :function and :description."
+  [pool]
+  (let [jobs @(:jobs-ref @(:pool-ref pool))
+        scheduled (filter (fn [[id job]] @(:scheduled? job)) jobs)]
+    (map (fn [[id {:keys [created-at initial-delay desc]}]]
+            (let [[_ desc fun-str] (re-find (re-pattern (str "^(.*)"
+                                                             utils/fn-desc-separator
+                                                             "(.*)$"))
+                                            desc)]
+              {:time (Timestamp. (+ created-at initial-delay))
+               :function fun-str
+               :description desc}))
+          scheduled)))
+
+(defn save-scheduled
+  "Saves scheduled jobs into the database and returns their count.
+
+  This function uses these configuration options:
+    - config/db-pool
+    - config/scheduled-pool
+  "
+  []
+  (let [jobs (scheduled-jobs config/scheduled-pool)]
+    (jdbc/with-connection @config/db-pool
+      (jdbc/transaction
+        (doseq [job jobs]
+          (jdbc/insert-record :scheduled_jobs job))))
+    (count jobs)))
