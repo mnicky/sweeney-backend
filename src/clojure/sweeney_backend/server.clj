@@ -10,9 +10,8 @@
            [org.codehaus.jackson JsonParseException]
            [com.sun.syndication.io ParsingFeedException]))
 
-(defonce ^:dynamic *server*
-  ;^{:doc "Var containing the running server."}
-  nil)
+(defonce ^{:doc "Var containing the running server." :dynamic true}
+  *server* nil)
 
 (defn error-response
   [e body]
