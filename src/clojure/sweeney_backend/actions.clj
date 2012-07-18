@@ -1,6 +1,7 @@
 (ns sweeney-backend.actions
   (:require [clojure.java.jdbc :as jdbc]
             [serializable.fn :as serial]
+            [taoensso.timbre :as log]
             [sweeney-backend.config :as config]
             [sweeney-backend.events :as events]
             [sweeney-backend.feeds :as feeds]
@@ -104,7 +105,7 @@
                                                              utils/fn-desc-separator
                                                              "(.*)$"))
                                             desc)]
-              {:time (Timestamp. (+ created-at initial-delay))
+              {:time (+ created-at initial-delay)
                :function fun-str
                :description desc}))
           scheduled)))
@@ -122,4 +123,20 @@
       (jdbc/transaction
         (doseq [job jobs]
           (jdbc/insert-record :scheduled_jobs job))))
+    (count jobs)))
+
+(defn load-scheduled
+  "Loads jobs from database, schedules them and delete them from the database.
+  Returns the number of loaded jobs."
+  []
+  (let [jobs (jdbc/with-connection @config/db-pool
+               (jdbc/with-query-results res
+                 ["SELECT time, function, description FROM scheduled_jobs"]
+                   (into [] res)))]
+    (doseq [{:keys [time function description]} jobs]
+      (utils/at time (load-string function) config/scheduled-pool :desc description))
+    (log/info "jobs loaded from the database and scheduled:" (count jobs))
+    (jdbc/with-connection @config/db-pool
+      (jdbc/transaction
+        (jdbc/delete-rows :scheduled_jobs ["1=1"])))
     (count jobs)))
