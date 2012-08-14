@@ -24,22 +24,22 @@
   scheduled-pool
   (at/mk-pool :cpu-count (threadpool/cpu-count)))
 
-(def last-n-stories
+(def ^:const last-n-stories
   ""
   5)
 
-(def min-period
+(def ^:const min-period
   ""
   (* 1000 60 15))
 
-(def server-port
+(def ^:const server-port
   ""
   4242)
 
-(def api-ns
+(def ^:const api-ns
   ""
   "sweeney-backend.api")
 
-(def log-level
+(def ^:const log-level
   "Default log level."
   :debug)
